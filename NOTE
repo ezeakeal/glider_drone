@@ -1,0 +1,36 @@
+Features:
+    Homesickness routine:
+        If no signal from groundstation received, do not disengage from balloon
+        Probably send a flag (trust of glider behaviour = True/False)
+            So during flight, you flick that switch in groundstation
+    Dual antennas:
+        Two orientations during flight (vertical, and gliding)
+        So two antennas
+    IMU mounted away from electronics
+    LEDs for status:
+        Help Debug whats going on (issue was disk mounting this time)
+    Shielded servo lines
+    SMS also
+    Directional tracker 
+    Return to sender information (like who the fuck I am)
+    Better FSTAB control - must mount everytime!
+
+
+Nice to have:
+    Smoke trails
+    Fireworks
+    Loud beeper for finding
+    Groundstation application which shows where the satellites are with overlay on camera!
+
+
+Todo list:
+    Fix the GPS tracking in the IMU module
+        GPS tracking set the offset for the IMU, but tracking was degrees, IMU was radians
+
+
+Flight tests:
+    Shake test
+    Radar test (ticknock to elsewhere)
+    Parachute test
+
+
