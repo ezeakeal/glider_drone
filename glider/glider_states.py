@@ -11,11 +11,14 @@ import glider_lib
 import glider_schedule as schedule
 import glider_states as states
 
+from glider.settings import *
+
+
 ##########################################
 # GLOBALS
 ##########################################
-LOG = log.setup_custom_logger('state_controller')
-LOG.setLevel(logging.WARN)
+LOG = setup_custom_logger('state')
+
 ##########################################
 # FUNCTIONS - UTIL
 ##########################################

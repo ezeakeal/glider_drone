@@ -7,8 +7,9 @@ from threading import Thread
 ##############################################
 # GLOBALS
 ##############################################
-LOG = log.setup_custom_logger('pilot')
-LOG.setLevel(logging.WARN)
+from glider.settings import *
+
+LOG = setup_custom_logger('pilot')
 
 
 class Pilot(object):

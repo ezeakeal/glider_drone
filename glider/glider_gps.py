@@ -1,17 +1,15 @@
 import os
 import log
 import logging
-from glider import settings
 
 from gps import *
 from time import *
 from threading import Thread
-
+from glider.settings import *
 # GUIDE
 # http://ava.upuaut.net/?p=768
 
-LOG = log.setup_custom_logger("GPS")
-LOG.setLevel(logging.WARN)
+LOG = setup_custom_logger('gps')
 
 
 class GPS_USB(object):

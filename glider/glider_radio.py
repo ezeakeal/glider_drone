@@ -20,8 +20,9 @@ from sat_radio import SatRadio
 ##########################################
 # GLOBALS
 ##########################################
-LOG = log.setup_custom_logger('radio')
-LOG.setLevel(logging.WARNING)
+from glider.settings import *
+
+LOG = setup_custom_logger('radio')
 
 class GliderRadio(SatRadio):
     

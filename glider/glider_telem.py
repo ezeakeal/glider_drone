@@ -12,6 +12,8 @@ import logging
 import traceback
 import dateutil.parser
 from threading import Thread
+from glider.settings import *
+
 
 # GUIDE
 # http://ava.upuaut.net/?p=768
@@ -19,8 +21,7 @@ from threading import Thread
 ##########################################
 # GLOBALS
 ##########################################
-LOG = log.setup_custom_logger('telemetry')
-LOG.setLevel(logging.WARN)
+LOG = setup_custom_logger('telemetry')
 
 
 class TelemetryHandler():

@@ -5,14 +5,15 @@ import json
 import logging
 import datetime
 import threading
+from glider.settings import *
 
 #####################################
 # GLOBALS
 #####################################
+LOG = setup_custom_logger('scheduler')
 STATE_DATA = {}
 FUNC_STACK = {}
-LOG = log.setup_custom_logger('scheduler')
-LOG.setLevel(logging.DEBUG)
+
 
 #####################################
 # FUNCTIONS

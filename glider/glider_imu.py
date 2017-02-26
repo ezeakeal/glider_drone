@@ -6,11 +6,12 @@ import logging
 import traceback
 from threading import Thread
 
+from glider.settings import *
+
 ##############################################
 # GLOBALS
 ##############################################
-LOG = log.setup_custom_logger('imu')
-LOG.setLevel(logging.WARN)
+LOG = setup_custom_logger('imu')
 
 class IMU(object):
 

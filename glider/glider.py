@@ -26,8 +26,7 @@ from glider_states import *
 ##########################################
 # GLOBALS
 ##########################################
-LOG = log.setup_custom_logger('glider')
-LOG.setLevel(logging.WARNING)
+LOG = setup_custom_logger('core')
 
 STATE_MACHINE = {
     "HEALTH_CHECK"  : healthCheck(),
