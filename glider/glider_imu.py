@@ -1,4 +1,4 @@
-import log
+import sys
 import time
 import math
 import redis
@@ -6,7 +6,11 @@ import logging
 import traceback
 from threading import Thread
 
+import RTIMU
+
 from glider.settings import *
+
+sys.path.append('.')
 
 ##############################################
 # GLOBALS
@@ -18,30 +22,42 @@ class IMU(object):
     """
     IMU class for obtaining orientation data
     """
+    imu = None
+    settings_path="/RTIMULib"
 
-    def __init__(self, GPS, poll_interval_ms=10.,
-        roll_offset=0, yaw_offset=0, pitch_offset=0):
+    def __init__(self, poll_interval_ms=10.):
         self.threadAlive = False
         self.roll = 0
         self.pitch = 0
         self.yaw = 0
-        self.GPS = GPS
-        self.roll_offset = roll_offset
-        self.yaw_offset = yaw_offset
-        self.pitch_offset = pitch_offset
         self.poll_interval_ms = poll_interval_ms
-        self.setup_redis_conn()
 
-    def setup_redis_conn(self):
-        self.redis_client = redis.StrictRedis(
-            host="127.0.0.1",
-            port=6379,
-            db=0
+    def init_imu(self):
+        LOG.info("Using/Creating settings: %s.ini (exists: %s)" % 
+            (self.settings_path, os.path.exists(self.settings_path)))
+        self.imu = RTIMU.RTIMU(
+            RTIMU.Settings(self.settings_path)
         )
 
+        LOG.info("IMU Name: " + self.imu.IMUName())
+        if (not self.imu.IMUInit()):
+            LOG.critical("IMU Init Failed")
+            sys.exit(1)
+        else:
+            LOG.info("IMU Init Succeeded")
+
+    def configure_imu(self):
+        self.imu.setSlerpPower(0.02)
+        self.imu.setGyroEnable(True)
+        self.imu.setAccelEnable(True)
+        self.imu.setCompassEnable(False)
+
+        self.poll_interval_ms = self.imu.IMUGetPollInterval()
+
     def start(self):
+        self.init_imu()
         readerThread = Thread(target=self.readRedisOrientation, args=())
-        LOG.info("Starting up orienation reader thread now")
+        LOG.info("Starting up orientation reader")
         self.threadAlive = True
         readerThread.start()
 
@@ -50,16 +66,9 @@ class IMU(object):
 
     def readRedisOrientation(self):
         while self.threadAlive:
-            self.pitch = float(self.redis_client.get("p")) + float(self.pitch_offset) # Switched because I mounted the chip wrong..
-            self.roll = float(self.redis_client.get("r")) + float(self.roll_offset) 
-            self.yaw = float(self.redis_client.get("y")) + float(self.yaw_offset)
-            if abs(self.yaw) > 180:
-                self.yaw = ((self.yaw + 180) % 360) - 180
-            LOG.debug("p: %f r: %f y: %f" % (
-                math.degrees(self.pitch), math.degrees(self.roll), math.degrees(self.yaw))
-            )
-            gps_track = self.GPS.gpsd.fix.track
-            if gps_track and not math.isnan(gps_track):
-                LOG.warning("Updating GPS track. Yaw offset = %s" % gps_track)
-                self.yaw_offset = gps_track - self.yaw
-            time.sleep(self.poll_interval_ms/1000.0)
+            if imu.IMURead():
+                r,p,y = imu.getFusionData()
+                self.roll = r
+                self.pitch = p
+                self.yaw = y
+                time.sleep(poll_interval*1.0/1000.0)

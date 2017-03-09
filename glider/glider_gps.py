@@ -1,5 +1,4 @@
 import os
-import log
 import logging
 
 from gps import *

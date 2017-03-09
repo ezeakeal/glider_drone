@@ -5,7 +5,6 @@
 # 
 ##############################################
 import os
-import log
 import time
 import serial
 import logging

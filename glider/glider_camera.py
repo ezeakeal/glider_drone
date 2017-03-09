@@ -1,5 +1,4 @@
 import os
-import log
 import time
 import logging
 import picamera

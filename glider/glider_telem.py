@@ -1,10 +1,9 @@
 ##############################################
 #
-# GliderV2 Client Software
+# GliderV3 Client Software
 # Author: Daniel Vagg
 #
 ##############################################
-import log
 import time
 import math
 import json

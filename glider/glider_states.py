@@ -1,5 +1,4 @@
 import os
-import log
 import math
 import time
 import numpy
@@ -7,8 +6,7 @@ import logging
 import subprocess
 
 # Glider Imports
-import glider_lib
-import glider_schedule as schedule
+import glider_operations
 import glider_states as states
 
 from glider.settings import *
@@ -61,7 +59,7 @@ class gliderState(object):
         if not self.nextState:
             raise Exception("NextState not defined")
         if self.readyToSwitch:
-            glider_lib.speak("Switching state to %s" % self.nextState)
+            glider_operations.speak("Switching state to %s" % self.nextState)
             return self.nextState
         else:
             return None
@@ -76,15 +74,11 @@ class healthCheck(gliderState):
     def __init__(self):
         super(healthCheck, self).__init__()
         self.nextState = "ASCENT"
-        self.checkedWings = False
         self.sleepTime = 5
 
     def execute(self):
-        glider_lib.center_wings()
-        if not self.checkedWings:
-            self.wingCheck()
         # Get the location data, figure if locked
-        location = glider_lib.GPS.getFix()
+        location = glider_operations.GPS.getFix()
         locationLocked = (location.epx < 20 and location.epy < 20)
         # Get battery data. Figure if healthy
         if not locationLocked:
@@ -92,24 +86,10 @@ class healthCheck(gliderState):
         else:
             # Seems all is good
             LOG.info("Health Check Passed")
-            glider_lib.speak("Health Check Complete")
-            glider_lib.TELEM.set_message("Health Good")
+            glider_operations.speak("Health Check Complete")
+            glider_operations.TELEM.set_message("Health Good")
             self.readyToSwitch = True
     
-    def wingCheck(self):
-        LOG.info("Moving wings")
-        wingMoveInterval = 0.2
-        # Move the wings to max range
-        glider_lib.center_wings()
-        time.sleep(wingMoveInterval)
-        glider_lib.min_wings()
-        time.sleep(wingMoveInterval)
-        glider_lib.center_wings()
-        time.sleep(wingMoveInterval)
-        glider_lib.max_wings()
-        time.sleep(wingMoveInterval)
-        glider_lib.center_wings()
-        self.checkedWings = True
 
 #-----------------------------------
 #         Ascent
@@ -131,10 +111,10 @@ class ascent(gliderState):
             96 + 10*math.cos(self.wing_angle_acc)
         ]
         LOG.info("Setting wing angles: %s" % wing_angles)
-        glider_lib.setWingAngle(wing_angles)
+        glider_operations.setWingAngle(wing_angles)
 
     def switch(self):
-        location = glider_lib.GPS.getFix()
+        location = glider_operations.GPS.getFix()
         LOG.info("Checking alt (%s) > target (%s)" % (
             location.altitude, self.desiredAltitude
         ))
@@ -157,7 +137,7 @@ class release(gliderState):
         song = subprocess.Popen(self.song_cmd)
         time.sleep(self.releaseDelay)
         LOG.info("Releasing cable")
-        glider_lib.releaseChord()
+        glider_operations.releaseChord()
         time.sleep(5)
         song.kill()
 
@@ -183,20 +163,20 @@ class glide(gliderState):
             self.recalculate_iter = self.recalculate_iter_delay
             # Get our new location
             LOG.debug("Figuring out location")
-            self.location = glider_lib.GPS.getFix()
+            self.location = glider_operations.GPS.getFix()
             LOG.debug("Current Location: \nLAT:%s LON:%s ALT:%s" % (
                 self.location.latitude, self.location.longitude, self.location.altitude
             ))
             LOG.debug("Target Location: \nLAT:%s LON:%s" % (
-                glider_lib.PILOT.destination[0], glider_lib.PILOT.destination[1]
+                glider_operations.PILOT.destination[0], glider_operations.PILOT.destination[1]
             ))
             # Update the pilot
-            glider_lib.PILOT.updateLocation(self.location.latitude, self.location.longitude)
+            glider_operations.PILOT.updateLocation(self.location.latitude, self.location.longitude)
             # Get pilot to update bearing
-            glider_lib.PILOT.updateDesiredYaw()
+            glider_operations.PILOT.updateDesiredYaw()
         # Update the servos
         LOG.debug("Updating angles (%s)" % self.recalculate_iter)
-        glider_lib.updateWingAngles()
+        glider_operations.updateWingAngles()
         self.recalculate_iter -= 1
 
         
@@ -218,11 +198,11 @@ class parachute(gliderState):
         self.chute_delay = 5 * (1/self.sleepTime) # 15 seconds
 
     def execute(self):
-        glider_lib.setPitchAngle(-80)
-        glider_lib.speak("Releasing parachute!")
-        glider_lib.updateWingAngles()
+        glider_operations.setPitchAngle(-80)
+        glider_operations.speak("Releasing parachute!")
+        glider_operations.updateWingAngles()
         if self.chute_delay < 1:
-            glider_lib.releaseParachute()
+            glider_operations.releaseParachute()
         self.chute_delay -= 1
 
     def switch(self):
@@ -241,7 +221,7 @@ class recovery(gliderState):
         self.sleepTime = 15
 
     def execute(self):
-        glider_lib.speak("Help me")
+        glider_operations.speak("Help me")
         LOG.critical("Attempting Recovery")
 
     def switch(self):

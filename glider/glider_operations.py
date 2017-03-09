@@ -1,12 +1,9 @@
 import os
-import log
 import math
 import glob
 import logging
 import traceback
 import subprocess
-
-import glider_ATMegaController as controller
 
 from glider_imu import IMU
 from glider_gps import GPS_USB
@@ -21,7 +18,7 @@ import RPi.GPIO as GPIO
 
 from glider.settings import *
 
-LOG = setup_custom_logger('lib')
+LOG = setup_custom_logger('operations')
 
 data_dump = "/data/data_received.dump"
 data_dump_file = None
@@ -66,21 +63,11 @@ def dataHandler(packet):
 ##########################################
 # GLOBAL COMPONENTS
 ##########################################
-##############################################
-# ORIENTATION WAKE UP
-# wake up
-# aibpidbgpagd shake up
-# shake up
-# iopubadgaebadg make up
-# make up
-# ....
-# YOU WANTED TO!
-##############################################
 GPS = GPS_USB()
-ORIENT = IMU(GPS) # yaw should be 0 when north
+ORIENT = IMU() # yaw should be 0 when north
 CAMERA = GliderCamera()
-RADIO = GliderRadio("/dev/ttyAMA0", "GliderV2", callback=dataHandler)
-PILOT = Pilot(ORIENT, desired_pitch=-math.radians(30))
+RADIO = GliderRadio("/dev/ttyAMA0", "GliderV3", callback=dataHandler)
+PILOT = Pilot(ORIENT, GPS, desired_pitch=-math.radians(30))
 TELEM = TelemetryHandler(RADIO, ORIENT, PILOT, GPS)
 
 ##########################################
@@ -93,7 +80,7 @@ CURRENT_STATE = None
 LED_RUNNING = 11
 
 ##########################################
-# FUNCTIONS - UTILITY
+# FUNCTIONS - START/STOP
 ##########################################
 
 
@@ -101,8 +88,6 @@ def startUp():
     global data_dump_file
     LOG.info("Starting up")
     data_dump_file = open(data_dump, 'w')
-    # Reset the SPI interface for some reason..
-    controller.reset_spi()
     # Set up some flashy lights
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(LED_RUNNING, GPIO.OUT)
@@ -129,10 +114,9 @@ def shutDown():
     CAMERA.stop()
 
 
-def alert(msg):
-    text = str(msg)
-
-
+#####################################################################
+# FUNCTIONS - Awkward methods of sharing information on glider state
+#####################################################################
 def getOverrideState():
     LOG.info("Returning override state: %s" % OVERRIDE_STATE)
     return OVERRIDE_STATE
@@ -143,11 +127,16 @@ def setOverrideState(newstate):
     LOG.warning("Setting override state: %s" % newstate)
     OVERRIDE_STATE = newstate
 
+
 def set_current_state(current_state):
     global CURRENT_STATE
     CURRENT_STATE = current_state
     TELEM.set_state(CURRENT_STATE)
 
+
+#####################################################################
+# FUNCTIONS - Pilot interface
+#####################################################################
 def setPitchAngle(newAngle):
     try:
         angle = math.radians(float(newAngle))
@@ -167,6 +156,10 @@ def setDestination(lat, lon):
     PILOT.updateDestination(lat, lon)
 
 
+
+#####################################################################
+# FUNCTIONS - Audio/Video
+#####################################################################
 def speak(text, speed=150):
     LOG.info("Speaking %s" % text)
     with open(os.devnull, "w") as devnull:
@@ -181,21 +174,6 @@ def sendImage():
 #################
 # WING MOVEMENTS
 #################
-def center_wings():
-    lcenter, rcenter, servoRange = PILOT.getWingCenterAndRange()
-    setWingAngle([lcenter, rcenter])
-
-
-def min_wings():
-    lcenter, rcenter, servoRange = PILOT.getWingCenterAndRange()
-    setWingAngle([lcenter - servoRange, rcenter - servoRange])
-
-
-def max_wings():
-    lcenter, rcenter, servoRange = PILOT.getWingCenterAndRange()
-    setWingAngle([lcenter + servoRange, rcenter + servoRange])
-
-
 def setWingAngle(angles):
     leftAngle = angles[0]
     rightAngle = angles[1]

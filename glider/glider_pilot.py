@@ -1,4 +1,3 @@
-import log
 import time
 import math
 import logging
