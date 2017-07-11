@@ -6,9 +6,7 @@ from threading import Thread
 ##############################################
 # GLOBALS
 ##############################################
-from glider.settings import *
-
-LOG = setup_custom_logger('pilot')
+LOG = logging.getLogger('pilot')
 
 
 class Pilot(object):

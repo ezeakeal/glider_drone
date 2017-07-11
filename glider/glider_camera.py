@@ -7,11 +7,10 @@ from PIL import Image
 from datetime import datetime
 from threading import Thread
 
-
 # GUIDE
 # http://ava.upuaut.net/?p=768
 
-LOG = log.setup_custom_logger("Camera")
+LOG = logging.getLogger("Camera")
 LOG.setLevel(logging.WARNING)
 
 

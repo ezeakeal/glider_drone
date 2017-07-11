@@ -1,9 +1,5 @@
 import sys
 import time
-import math
-import redis
-import logging
-import traceback
 from threading import Thread
 
 import RTIMU

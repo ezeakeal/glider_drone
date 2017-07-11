@@ -16,9 +16,7 @@ import RPi.GPIO as GPIO
 # http://raspi.tv/2013/automatic-exposure-compensation-testing-for-the-pi-camera
 # http://bytingidea.com/2014/12/11/raspberry-pi-powered-long-exposures/
 
-from glider.settings import *
-
-LOG = setup_custom_logger('operations')
+LOG = logging.getLogger('operations')
 
 data_dump = "/data/data_received.dump"
 data_dump_file = None

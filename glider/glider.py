@@ -1,11 +1,6 @@
 import sys
-import math
-import time
-import types
 import signal
-import logging
 import traceback
-import importlib
 
 print "Starting glider.."
 
@@ -24,7 +19,7 @@ from glider_states import *
 ##########################################
 # GLOBALS
 ##########################################
-LOG = setup_custom_logger('core')
+LOG = logging.getLogger('core')
 
 STATE_MACHINE = {
     "HEALTH_CHECK"  : healthCheck(),
