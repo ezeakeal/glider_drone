@@ -1,35 +1,34 @@
 # Conditionals
 RTIMU_EXIST := $(which RTIMULibCal > /dev/null)
 
-depdencies:
+dependencies:
 	# first time install of dependencies
 	apt-get update
 	# Required basics
 	apt-get install -y vim git python supervisor python-gps python-pip redis-server
 	# Requirements for RTIMUlib2
 	apt-get install -y i2c-tools cmake python-dev octave uuid-dev libicu-dev qt4-dev-tools 
-	# Requirements for Glider
-	apt-get install -y python-PIL
+	# Requirements for Glider (camera/servo control)
+	apt-get install -y python-PIL python-smbus
 	# Pip modules
-	pip install redis nose
-
-gps:
-    # Update the gpsd config to hit the right device
-    echo "Setup your GPS daemon: https://www.raspberrypi.org/forums/viewtopic.php?f=45&t=53644"
+	pip install redis nose adafruit-pca9685
 
 rtimu:
-	ifndef $(RTIMU_EXIST)
-		rm -rf /opt/rtimu
-		git clone https://github.com/richards-tech/RTIMULib2.git /opt/rtimu
-		mkdir /opt/rtimu/Linux/build
-		cd /opt/rtimu/Linux/build && cmake .. && make -j4 && make install && ldconfig
-		cd /opt/rtimu/Linux/python && python setup.py build && python setup.py install
-	endif
+	rm -rf /opt/rtimu
+	git clone https://github.com/Nick-Currawong/RTIMULib2.git /opt/rtimu
+	mkdir /opt/rtimu/Linux/build
+	cd /opt/rtimu/Linux/build && cmake .. && make -j4 && make install && ldconfig
+	cd /opt/rtimu/Linux/python && python setup.py build && python setup.py install
 
-setup: depdencies rtimu gps
-	mkdir /var/log/glider
+supervisor:
 	cp supervisord.conf /etc/supervisor/conf.d/glider.conf
 	supervisorctl -c /etc/supervisor/supervisord.conf reread; supervisorctl -c /etc/supervisor/supervisord.conf update
+
+setup: dependencies rtimu gps supervisor
+	mkdir /var/log/glider
+
+clean:
+	rm -rf /opt/rtimu
 
 link:
 	ln -s $PWD/glider /opt/glider

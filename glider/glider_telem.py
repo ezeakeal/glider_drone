@@ -6,12 +6,10 @@
 ##############################################
 import time
 import math
-import json
 import logging
 import traceback
 import dateutil.parser
 from threading import Thread
-from glider.settings import *
 
 
 # GUIDE
@@ -20,7 +18,7 @@ from glider.settings import *
 ##########################################
 # GLOBALS
 ##########################################
-LOG = setup_custom_logger('telemetry')
+LOG = logging.getLogger("Telemetry")
 
 
 class TelemetryHandler():

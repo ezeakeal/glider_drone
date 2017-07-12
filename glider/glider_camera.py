@@ -6,20 +6,25 @@ import picamera
 from PIL import Image
 from datetime import datetime
 from threading import Thread
+from config import glider_config
 
 # GUIDE
 # http://ava.upuaut.net/?p=768
 
 LOG = logging.getLogger("Camera")
-LOG.setLevel(logging.WARNING)
+LOG.setLevel(logging.DEBUG)
 
 
 class GliderCamera(object):
+    threads = []
 
     def __init__(self, 
         low_quality_interval=15,
         high_quality_interval=60,
-        photo_path="/data/camera"):
+        photo_path=None):
+        LOG.info("Camera init")
+        if not photo_path:
+            photo_path = glider_config.get("camera", "data_dir")
         self.photo_path = photo_path
         self.last_low_pic = time.time()
         self.last_high_pic = time.time()
@@ -38,7 +43,7 @@ class GliderCamera(object):
         camera.color_effects = None
         camera.rotation = 0
         camera.hflip = True
-        camera.vflip = True
+        camera.vflip = False
         camera.video_stabilization = True
         camera.exposure_compensation = 0
         camera.exposure_mode = 'auto'
@@ -56,10 +61,14 @@ class GliderCamera(object):
     def _take_video(self):
         timestamp = datetime.now().strftime("%H%M%S%f")
         out_path = os.path.join(self.photo_path, "video_%s.h264" % timestamp)
+        LOG.info("Creating (%ss) video at %s" % (self.video_requested, out_path))
         with self.get_cam("video") as camera:
+            LOG.info("Starting recording")
             camera.start_recording(out_path)
             camera.wait_recording(self.video_requested)
+            LOG.info("Stopping recording")
             camera.stop_recording()
+            camera.close()
         return out_path
 
     def take_video(self, seconds):
@@ -72,6 +81,7 @@ class GliderCamera(object):
             camera.capture("/tmp/precompressed.jpg", format="jpeg", quality=40)
             image = Image.open("/tmp/precompressed.jpg")
             image.convert('P', palette=Image.ADAPTIVE, colors=200).convert("RGB").save(out_path, "JPEG", quality=20, optimize=True)
+            camera.close()
         return out_path
 
     def take_high_pic(self):
@@ -79,7 +89,7 @@ class GliderCamera(object):
         out_path = os.path.join(self.photo_path, "high_%s.png" % timestamp)
         with self.get_cam("high") as camera:
             camera.capture(out_path, format="png")
-
+            camera.close()
         return out_path
 
     def take_pictures(self):
@@ -104,6 +114,9 @@ class GliderCamera(object):
         self.threadAlive = True
         LOG.info("Starting up Camera thread now")
         cameraThread.start()
+        self.threads.append(cameraThread)
 
     def stop(self):
         self.threadAlive = False
+        for t in self.threads:
+            t.join()

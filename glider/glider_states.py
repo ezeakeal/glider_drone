@@ -9,8 +9,6 @@ import subprocess
 import glider_operations
 import glider_states as states
 
-from glider.settings import *
-
 
 ##########################################
 # GLOBALS

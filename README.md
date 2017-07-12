@@ -33,7 +33,80 @@ Using `raspi-config` (https://learn.sparkfun.com/tutorials/raspberry-pi-spi-and-
 2. Enable Camera
 3. Enable Remote GPIO (optional - enabling now just in case I use it later)
 
-test
+## Setup the disks
+
+The glider will record video and logs to a directory specified in `glider_conf.ini`
+For example, images/videos will be written to `/data/camera' by default.
+Make any required directories before execution (I recommend using a USB stick)
+
+## Calibrate the MPU
+
+https://github.com/RTIMULib/RTIMULib2/blob/master/Calibration.pdf
+
+Follow all the instructions for callibration (run RTIMULibCal inside of RTEllipsoidFit)
+This will generate an RTIMULib.ini config file - move that to a well-known path.
+Finally, set the full path to the RTIMULib.ini file in glider_conf.ini
+
+## Setup the Servo Hat
+
+Oh heavens. I will never buy from banggood again.
+* The sensor board I got breaks the MPU - wont initialize.
+    * https://www.banggood.com/4-in-1-Temperature-Pressure-Altitude-Light-Sensor-Module-p-965547.html
+* The servo hat had no documentation online, but I eventually found it from a comment:
+    * From a comment here: http://club.dx.com/forums/Forums.dx/threadid.1440743
+    * http://m5.img.dxcdn.com/CDDriver/xrj/340853.zip
+    * Then open the docx with the crazy characters.
+    * Here is the git repo they use: https://github.com/geekroo/Geekroo-PiCobber-PWMServo.git
+    * It's HEAVILY inspired by https://learn.adafruit.com/adafruit-16-channel-pwm-servo-hat-for-raspberry-pi/library-reference
+
+## Find the range of your servos
+
+The min/max duty cycle of the servo pulse can be configured in the settings.
+
+**Note:** It took me some trial and error to figure this out (read Weird things below)
+
+Using the PWM controller library from Adafruit or geekroo, start sending pulses to your servo.
+I did the following
+
+```
+from Adafruit_PWM_Servo_Driver import PWM
+import time
+pwm = PWM(0x70) # i2c address for the servo hat controller
+pwm.setPWMFreq(50)
+
+# Try find min/max angle values
+# pwm.setPWM(0,0, int(4096/20*(pulse_fraction)))
+# I decreased the value of pulse_fraction from 1, to 0.7 until the servo stopped moving
+# Then I increased the value until it stopped moving the other way
+# The command is setting the pulse duration (in multiples of 1ms out of 20ms pulse)
+# So pulse_fraction = 1 means 1ms@5V, then 19ms@0V
+
+# The min I found
+pwm.setPWM(0,0, int(4096/20*(0.7)))
+# The max I found
+pwm.setPWM(0,0, int(4096/20*(2.6)))
+```
+
+Once you have these values, set them in glider_conf.ini
+
+### Weird things that happened
+
+When I was trying to test the servos, some weird things happened before I found the range.
+
+* Servo was sweeping through 30 or 40 degrees when I tried setting a new pulse width.
+    * Not like a jitter or twitch, this was random sweeping for a few fractions of a second each time.
+    * I thought that the servo was broken or frequency was wrong.
+    * They were bad assumptions. Turns out that doubling the frequency reduced the symptom
+        * Initial pulse was now reasonable in some cases!
+        * But a second pulse was being sent, causing weirdness.
+* Generally: if a pulse is 20ms long (50hz frequency), then:
+    * 2ms high (5V) + 18ms low represents 180deg
+    * 1ms high represents 0deg
+* I was setting some mad values outside of this range
+    * The library takes a the pulse width as a portion of 4096 (e.g. 1024 is 25% pulse width)
+* **Important:** IF you give the servo a terrible value, it may not recover from trying to reach that, and future values may not work.
+    * This is what led to such confusion on my part. I was putting the servo into a weird state because I lacked prior knowledge on servo pulses.
+
 
 # Internal notes
 

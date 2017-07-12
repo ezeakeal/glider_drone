@@ -1,14 +1,14 @@
-import sys, getopt
+import sys
 
 sys.path.append('.')
 import RTIMU
 import os.path
 import time
-import math
 import redis
 
+from config import glider_config
+SETTINGS_FILE = glider_config.get("imu", "conf_path")
 
-SETTINGS_FILE = "/RTIMULib"
 print("Using settings file " + SETTINGS_FILE + ".ini")
 if not os.path.exists(SETTINGS_FILE + ".ini"):
   print("Settings file does not exist, will be created")
@@ -25,9 +25,9 @@ else:
     print("IMU Init Succeeded")
 
 redis_client = redis.StrictRedis(
-    host="127.0.0.1",
-    port=6379,
-    db=0
+    host=glider_config.get("redis_client", "host"),
+    port=glider_config.get("redis_client", "port"),
+    db=glider_config.get("redis_client", "db")
 )
 
 # this is a good time to set any fusion parameters
@@ -42,8 +42,8 @@ print("Recommended Poll Interval: %dmS\n" % poll_interval)
 while True:
   if imu.IMURead():
     r,p,y = imu.getFusionData()
-    redis_client.set("p", p)
-    redis_client.set("r", r)
-    redis_client.set("y", y)
+    redis_client.set("pitch", p)
+    redis_client.set("roll", r)
+    redis_client.set("yaw", y)
 
     time.sleep(poll_interval*1.0/1000.0)
