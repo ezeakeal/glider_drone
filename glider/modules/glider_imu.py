@@ -1,6 +1,6 @@
 import redis
 import logging
-from config import glider_config
+from glider.config import glider_config
 
 ##############################################
 # GLOBALS
@@ -17,8 +17,6 @@ class IMU(object):
     But if you try run IMU stuff in a class like this it will break!
     """
     imu = None
-    # settings_path = glider_config.get("imu", "rtimu_conf")
-    settings_path = "RTIMULib"
 
     def __init__(self):
         self.redis_client = redis.StrictRedis(

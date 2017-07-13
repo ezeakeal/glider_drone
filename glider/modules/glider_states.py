@@ -1,11 +1,7 @@
-import os
 import math
 import time
-import numpy
 import logging
 import subprocess
-
-# Glider Imports
 import glider_operations
 import glider_states as states
 
@@ -13,7 +9,7 @@ import glider_states as states
 ##########################################
 # GLOBALS
 ##########################################
-LOG = setup_custom_logger('state')
+LOG = logging.getLogger('state')
 
 ##########################################
 # FUNCTIONS - UTIL

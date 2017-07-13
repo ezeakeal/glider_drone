@@ -1,10 +1,8 @@
 import time
 import serial
 import struct
- 
-from xbee import ZigBee
- 
- 
+
+
 class SatRadio(object):
     DEFAULT_SHORT_ADDR = 'FFFE'
     MODE_P2P="POINT_TO_POINT"

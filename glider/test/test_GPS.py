@@ -1,5 +1,5 @@
 from unittest import TestCase
-from glider.glider_gps import GPS_USB
+from glider.modules.glider_gps import GPS_USB
 
 class TestGPS(TestCase):
 

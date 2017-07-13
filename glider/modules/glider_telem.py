@@ -11,10 +11,6 @@ import traceback
 import dateutil.parser
 from threading import Thread
 
-
-# GUIDE
-# http://ava.upuaut.net/?p=768
-
 ##########################################
 # GLOBALS
 ##########################################

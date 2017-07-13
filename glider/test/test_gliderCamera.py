@@ -1,7 +1,7 @@
 import os
 import time
 from unittest import TestCase
-from glider.glider_camera import GliderCamera
+from glider.modules.glider_camera import GliderCamera
 
 class TestGliderCamera(TestCase):
     MAX_LOWRES_PIC_SIZE_BYTES = 50 * 10**3 # 50kb max

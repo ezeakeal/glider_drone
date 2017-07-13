@@ -1,20 +1,9 @@
-import sys
 import signal
+import logging
 import traceback
+import glider_operations
+import glider_states as gstates
 
-print "Starting glider.."
-
-# Glider Imports
-try:
-    import glider_operations
-except:
-    print traceback.print_exc()
-    sys.exit(1)
-from glider_states import *
-
-##########################################
-# TODO
-##########################################
 
 ##########################################
 # GLOBALS
@@ -22,13 +11,13 @@ from glider_states import *
 LOG = logging.getLogger('core')
 
 STATE_MACHINE = {
-    "HEALTH_CHECK"  : healthCheck(),
-    "ASCENT"        : ascent(),                   
-    "RELEASE"       : release(),                
-    "FLIGHT"        : glide(),                    
-    "PARACHUTE"     : parachute(),
-    "RECOVER"       : recovery(),
-    "ERROR"         : errorState()
+    "HEALTH_CHECK"  : gstates.healthCheck(),
+    "ASCENT"        : gstates.ascent(),
+    "RELEASE"       : gstates.release(),
+    "FLIGHT"        : gstates.glide(),
+    "PARACHUTE"     : gstates.parachute(),
+    "RECOVER"       : gstates.recovery(),
+    "ERROR"         : gstates.errorState()
 }
 CURRENT_STATE = "HEALTH_CHECK"
 RUNNING = True

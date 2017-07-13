@@ -1,5 +1,5 @@
 from unittest import TestCase
-from glider.glider_imu import IMU
+from glider.modules.glider_imu import IMU
 import time
 
 class TestIMU(TestCase):

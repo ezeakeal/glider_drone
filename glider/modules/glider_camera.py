@@ -6,10 +6,7 @@ import picamera
 from PIL import Image
 from datetime import datetime
 from threading import Thread
-from config import glider_config
-
-# GUIDE
-# http://ava.upuaut.net/?p=768
+from glider.config import glider_config
 
 LOG = logging.getLogger("Camera")
 LOG.setLevel(logging.DEBUG)
@@ -80,7 +77,9 @@ class GliderCamera(object):
         with self.get_cam("low") as camera:
             camera.capture("/tmp/precompressed.jpg", format="jpeg", quality=40)
             image = Image.open("/tmp/precompressed.jpg")
-            image.convert('P', palette=Image.ADAPTIVE, colors=200).convert("RGB").save(out_path, "JPEG", quality=20, optimize=True)
+            image.convert('P', palette=Image.ADAPTIVE, colors=200).convert("RGB").save(
+                out_path, "JPEG", quality=20, optimize=True
+            )
             camera.close()
         return out_path
 

@@ -1,9 +1,10 @@
 import math
 import time
 import logging
+# noinspection PyUnresolvedReferences
 import Adafruit_PCA9685
 from threading import Thread
-from config import glider_config
+from glider.config import glider_config
 
 LOG = logging.getLogger('glider_servo_controller')
 
@@ -35,10 +36,10 @@ class GliderPWMController(object):
     # Initialize all angles, and set the old values to a different value to trigger servo update
     # [desired_value, current_value]
     # If they match, no servo signal is sent to the servo hat
-    angle_wing_l = [90, 0]
-    angle_wing_r = [90, 0]
-    angle_parachute = [180, 0]
-    angle_balloon_release = [180, 0]
+    angle_wing_l = [90, -1]
+    angle_wing_r = [90, -1]
+    angle_parachute = [0, -1]
+    angle_balloon_release = [0, -1]
 
     def __init__(self):
         LOG.debug("Staring up PWM Controller (Address=%s Frequency=%shz)" % (self.address, self.frequency))
@@ -66,20 +67,19 @@ class GliderPWMController(object):
                 self.servo_max_ms, self.servo_min_ms  # Invert because servo is flipped on other side
             )
             self._set_servo_angle(
-                self.addr_chute, self.angle_parachute,
-                self.servo_min_ms, self.servo_max_ms
-            )
-            self._set_servo_angle(
                 self.addr_relse, self.angle_balloon_release,
                 self.servo_min_ms, self.servo_max_ms
             )
+            self._set_servo_angle(
+                self.addr_chute, self.angle_parachute,
+                self.servo_min_ms, self.servo_max_ms
+            )
+            time.sleep(0.01)
 
     def _set_servo_angle(self, servo_address, angle_pair, min_ms, max_ms):
-        if angle_pair[0] == angle_pair[1]:
-            # The new angle and old angle are the same
+        if angle_pair[0] == angle_pair[1]: # The new angle and old angle are the same
             return
-        else:
-            # The new angle is different!
+        else: # The new angle is different!
             angle_pair[1] = angle_pair[0]
         angle = math.ceil(angle_pair[0])  # round the angle to reduce calls for minor adjustments
         ms_range = float(max_ms - min_ms)
@@ -102,8 +102,8 @@ class GliderPWMController(object):
 
     def release_parachute(self):
         LOG.debug("Releasing parachute")
-        self.angle_parachute[0] = 0
+        self.angle_parachute[0] = 180
 
     def release_from_balloon(self):
         LOG.debug("Releasing from balloon")
-        self.angle_balloon_release[0] = 0
+        self.angle_balloon_release[0] = 180
