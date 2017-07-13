@@ -22,34 +22,8 @@ conf_path = os.path.join(base_dir, "glider_conf.ini")
 logging.config.fileConfig(conf_path)
 
 LOG = logging.getLogger("glider")
+logging.getLogger("Adafruit_I2C").setLevel(logging.WARN)
 
-# ##########################################
-# # GLIDER UTILITIES
-# ##########################################
-#     override_state = None
-#
-#     #####################################################################
-#     # FUNCTIONS - Pilot interface
-#     #####################################################################
-#     def setPitchAngle(newAngle):
-#         try:
-#             angle = math.radians(float(newAngle))
-#             PILOT.updatePitch(angle)
-#         except Exception, e:
-#             LOG.error(e)
-#
-#
-#     def setTurnSeverity(newSev):
-#         try:
-#             PILOT.updateTurnSev(newSev)
-#         except Exception, e:
-#             LOG.error(e)
-#
-#
-#     def setDestination(lat, lon):
-#         PILOT.update_destination(lat, lon)
-#
-#
 #
 #     #####################################################################
 #     # FUNCTIONS - Audio/Video
@@ -61,35 +35,6 @@ LOG = logging.getLogger("glider")
 #         newest_image = max(glob.iglob('%s/low_*.jpg' % CAMERA.photo_path), key=os.path.getctime)
 #         RADIO.sendImage(newest_image)
 #
-#
-#     #################
-#     # WING MOVEMENTS
-#     #################
-#     def setWingAngle(angles):
-#         leftAngle = angles[0]
-#         rightAngle = angles[1]
-#         LOG.debug("Setting: %d %d" % (leftAngle, rightAngle))
-#         controller.W_glider_command("W:%2.2f:%2.2f" % (leftAngle, rightAngle))
-#
-#
-#     def updateWingAngles():
-#         wingAngles = PILOT.get_servo_angles()
-#         LOG.debug("Wing angles received: %s" % wingAngles)
-#         if wingAngles:
-#             setWingAngle(wingAngles)
-#
-#
-#     ########################
-#     # Release Chute/Balloon
-#     ########################
-#     def releaseChord():
-#         CAMERA.take_video(15)
-#         controller.W_glider_command("D:")
-#
-#
-#     def releaseParachute():
-#         CAMERA.take_video(15)
-#         controller.W_glider_command("P:")
 #
 #
 #     ########################
@@ -112,7 +57,7 @@ class Glider(object):
         "RECOVER": gstates.recovery(),
         "ERROR": gstates.errorState()
     }
-    current_state = "HEALTH_CHECK"
+    current_state = "FLIGHT"
 
     def __init__(self):
         # Initialize all modules
@@ -175,7 +120,7 @@ class Glider(object):
                 if newState:
                     LOG.debug("State is changing from (%s) to (%s)" % (
                         self.current_state, newState))
-                    self.speak("Switching state to %s" % self.nextState)
+                    self.speak("Switching state to %s" % newState)
                     self.current_state = newState
 
                 # Check if we need to override the state for any reason (this signal comes from groundstation)

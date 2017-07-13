@@ -4,7 +4,7 @@ import logging
 import subprocess
 
 from config import glider_config
-LOG = logging.getLogger('state')
+LOG = logging.getLogger("glider.states")
 
 
 ##########################################
@@ -104,22 +104,20 @@ class release(gliderState):
     def __init__(self):
         super(release, self).__init__()
         self.nextState = "FLIGHT"
-        self.song_cmd = ["play", "-v 1.0", "/opt/glider/release_song.mp3", "-q"]
-        self.releaseDelay = 145
+        self.song_cmd = ["mpg321", "/opt/glider/release_song.mp3", "-q"]
+        self.releaseDelay = 144
 
     def execute(self, glider_instance):
         LOG.info("Playing song")
+        glider_instance.camera.take_video(300)
         song = subprocess.Popen(self.song_cmd)
         time.sleep(self.releaseDelay)
         LOG.info("Releasing cable")
         glider_instance.pwm_controller.release_from_balloon()
         time.sleep(5)
         song.kill()
-
-    def switch(self):
         self.readyToSwitch = True
-        return super(release, self).switch()
-    
+
 #-----------------------------------
 #         Guided Flight
 #-----------------------------------
@@ -127,11 +125,11 @@ class glide(gliderState):
     def __init__(self):
         super(glide, self).__init__()
         self.nextState = "PARACHUTE"
-        self.parachute_height = glider_config.get("mission", "parachute_height")
+        self.parachute_height = glider_config.getfloat("mission", "parachute_height")
         self.location = None
         self.sleepTime = glider_config.getfloat("flight", "wing_update_interval")
-        self.recalculate_iter = 0 # Counter to reduce CPU load (recalculate
-        self.recalculation_interval= glider_config.get("flight", "location_refresh_interval")
+        self.recalculation_timestamp = 0 # Counter to reduce CPU load (recalculate
+        self.recalculation_interval= glider_config.getfloat("flight", "location_refresh_interval")
 
     def execute(self, glider_instance):
         now = time.time()
@@ -139,18 +137,17 @@ class glide(gliderState):
             self.recalculation_timestamp = now
             # Get our new location
             self.location = glider_instance.gps.data
+            if self.location.lat == "n/a":
+                LOG.warning("Bad location, pausing for 5 seconds")
+                time.sleep(5)
+                return
             glider_instance.pilot.update_location(self.location.lat, self.location.lon)
         # Update the servos
         left_angle, right_angle = glider_instance.pilot.update_wing_angles()
         glider_instance.pwm_controller.set_wings(left_angle, right_angle)
-
-    def switch(self):
-        if (self.location and
-            self.location.alt and
-            (not math.isnan(self.location.alt)) and
-            self.location.altitude < self.parachute_height):
+        # Check if we're ready to switch
+        if (self.location and self.location.alt and self.location.alt < self.parachute_height):
             self.readyToSwitch = True
-        return super(glide, self).switch()
 
 #-----------------------------------
 #         PARACHUTE
@@ -163,11 +160,11 @@ class parachute(gliderState):
         self.chute_delay = glider_config.getfloat("mission", "dive_time_before_chute")
 
     def execute(self, glider_instance):
-        glider_instance.pilot.desired_pitch_deg(-80)
-        glider_instance.speak("Releasing parachute!")
-        glider_instance.updateWingAngles()
+        glider_instance.camera.take_video(60)
+        glider_instance.pilot.desired_pitch_deg = -80
         if self.chute_delay < 1:
             glider_instance.pwm_controller.release_parachute()
+        glider_instance.pilot.update_wing_angles()
         self.chute_delay -= 1
 
     def switch(self):
@@ -187,7 +184,7 @@ class recovery(gliderState):
         self.contact_detail = glider_config.get("mission", "contact_detail")
 
     def execute(self, glider_instance):
-        glider_instance.speak("Please help me! Contact %s" )
+        glider_instance.speak("Please help me! Contact %s" % self.contact_detail)
 
     def switch(self):
         pass
@@ -209,7 +206,4 @@ class errorState(gliderState):
         # Send battery level
         # LOOK FOR A RESPONSE!
         # We need to set the state it should go in to..
-        pass
-
-    def switch(self):
-        pass
+        self.readyToSwitch = True

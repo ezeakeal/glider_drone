@@ -8,8 +8,8 @@ dependencies:
 	apt-get install -y vim git python supervisor python-gps python-pip redis-server
 	# Requirements for RTIMUlib2
 	apt-get install -y i2c-tools cmake python-dev octave uuid-dev libicu-dev qt4-dev-tools 
-	# Requirements for Glider (camera/servo control)
-	apt-get install -y python-PIL python-smbus
+	# Requirements for Glider (camera/servo/music control)
+	apt-get install -y python-PIL python-smbus mpg321
 	# Pip modules
 	pip install redis nose adafruit-pca9685
 

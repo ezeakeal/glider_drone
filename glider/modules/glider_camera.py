@@ -51,8 +51,8 @@ class GliderCamera(object):
         if cam_type == "low":
             camera.resolution = (640, 480)
         if cam_type == "video":
-            camera.resolution = (1296,972)             
-        return camera 
+            camera.resolution = (1296,972)
+        return camera
 
     def _take_video(self):
         timestamp = datetime.now().strftime("%H%M%S%f")
@@ -92,19 +92,22 @@ class GliderCamera(object):
 
     def take_pictures(self):
         while self.threadAlive:
-            now = time.time() 
-            if self.video_requested:
-                out_path = self._take_video()
-                self.video_requested = 0
-                LOG.debug("Created video: %s" % out_path)
-            if now - self.last_low_pic > self.low_quality_interval:
-                out_path = self.take_low_pic()
-                self.last_low_pic = now
-                LOG.debug("Created low pic: %s" % out_path)
-            if now - self.last_high_pic > self.high_quality_interval:
-                out_path = self.take_high_pic()
-                self.last_high_pic = now
-                LOG.debug("Created high pic: %s" % out_path)
+            now = time.time()
+            try:
+                if self.video_requested:
+                    out_path = self._take_video()
+                    self.video_requested = 0
+                    LOG.debug("Created video: %s" % out_path)
+                if now - self.last_low_pic > self.low_quality_interval:
+                    out_path = self.take_low_pic()
+                    self.last_low_pic = now
+                    LOG.debug("Created low pic: %s" % out_path)
+                if now - self.last_high_pic > self.high_quality_interval:
+                    out_path = self.take_high_pic()
+                    self.last_high_pic = now
+                    LOG.debug("Created high pic: %s" % out_path)
+            except picamera.exc.PiCameraMMALError:
+                LOG.error("Camera can't initialize, try again later")
             time.sleep(1)
 
     def start(self):
