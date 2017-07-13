@@ -2,26 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e8edcd78-bce6-4821-bfc9-dd0cee85d218" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/glider/modules/__init__.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/glider/TODO" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/glider/glider_camera.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/glider/glider_gps.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/glider/glider_imu.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/glider/glider_operations.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/glider/glider_pilot.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/glider/glider_pwm_controller.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/glider/glider_radio.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/glider/glider_states.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/glider/glider_telem.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/glider/sat_radio.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/glider/test/haversine.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/glider/modules/sat_radio.py" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/glider/modules/glider_operations.py" afterPath="$PROJECT_DIR$/glider/glider_utilities.py" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/glider/modules/glider_states.py" afterPath="$PROJECT_DIR$/glider/glider_states.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/__init__.py" afterPath="$PROJECT_DIR$/glider/__init__.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/glider.py" afterPath="$PROJECT_DIR$/glider/glider.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/glider_conf.ini" afterPath="$PROJECT_DIR$/glider/glider_conf.ini" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/test/test_GPS.py" afterPath="$PROJECT_DIR$/glider/test/test_GPS.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/test/test_IMU.py" afterPath="$PROJECT_DIR$/glider/test/test_IMU.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/test/test_gliderCamera.py" afterPath="$PROJECT_DIR$/glider/test/test_gliderCamera.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/test/test_gliderPWMController.py" afterPath="$PROJECT_DIR$/glider/test/test_gliderPWMController.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/modules/__init__.py" afterPath="$PROJECT_DIR$/glider/modules/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/modules/glider_camera.py" afterPath="$PROJECT_DIR$/glider/modules/glider_camera.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/modules/glider_gps.py" afterPath="$PROJECT_DIR$/glider/modules/glider_gps.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/modules/glider_imu.py" afterPath="$PROJECT_DIR$/glider/modules/glider_imu.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/modules/glider_pilot.py" afterPath="$PROJECT_DIR$/glider/modules/glider_pilot.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/modules/glider_pwm_controller.py" afterPath="$PROJECT_DIR$/glider/modules/glider_pwm_controller.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/modules/glider_radio.py" afterPath="$PROJECT_DIR$/glider/modules/glider_radio.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/modules/glider_telem.py" afterPath="$PROJECT_DIR$/glider/modules/glider_telem.py" />
     </list>
     <ignored path="glider_drone.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -38,10 +33,12 @@
     <SUITE FILE_PATH="coverage/glider_drone$Nosetests_in_TestGliderCamera__3_.coverage" NAME="Nosetests in TestGliderCamera (3) Coverage Results" MODIFIED="1499792760514" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetests_in_TestGliderPWMController__5_.coverage" NAME="Nosetests in TestGliderPWMController (5) Coverage Results" MODIFIED="1499880156829" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetest_TestGliderPWMController_test_set_wings__1_.coverage" NAME="Nosetest TestGliderPWMController.test_set_wings (1) Coverage Results" MODIFIED="1499872904784" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
-    <SUITE FILE_PATH="coverage/glider_drone$__init__.coverage" NAME="__init__ Coverage Results" MODIFIED="1499783929872" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider" />
+    <SUITE FILE_PATH="coverage/glider_drone$__init__.coverage" NAME="__init__ Coverage Results" MODIFIED="1499966410404" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/modules" />
+    <SUITE FILE_PATH="coverage/glider_drone$glider_imu.coverage" NAME="glider_imu Coverage Results" MODIFIED="1499966423177" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/modules" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetests_in_TestIMU__2_.coverage" NAME="Nosetests in TestIMU (2) Coverage Results" MODIFIED="1499800306002" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetests_in_TestGliderCamera__1_.coverage" NAME="Nosetests in TestGliderCamera (1) Coverage Results" MODIFIED="1499789082403" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetest_TestGliderPWMController_test_set_wings__3_.coverage" NAME="Nosetest TestGliderPWMController.test_set_wings (3) Coverage Results" MODIFIED="1499873345067" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
+    <SUITE FILE_PATH="coverage/glider_drone$glider_pilot.coverage" NAME="glider_pilot Coverage Results" MODIFIED="1499974692441" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/modules" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetests_in_TestGliderPWMController__1_.coverage" NAME="Nosetests in TestGliderPWMController (1) Coverage Results" MODIFIED="1499880610619" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetest_TestGliderPWMController_test_set_wings.coverage" NAME="Nosetest TestGliderPWMController.test_set_wings Coverage Results" MODIFIED="1499879936126" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetest_TestGliderCamera_test_take_video.coverage" NAME="Nosetest TestGliderCamera.test_take_video Coverage Results" MODIFIED="1499790061848" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
@@ -68,12 +65,13 @@
     <SUITE FILE_PATH="coverage/glider_drone$gps_usb.coverage" NAME="gps_usb Coverage Results" MODIFIED="1499715739105" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/tests" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetest_TestGPS_test_data__1_.coverage" NAME="Nosetest TestGPS.test_data (1) Coverage Results" MODIFIED="1499781363709" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetest_TestGliderCamera_test_take_video__3_.coverage" NAME="Nosetest TestGliderCamera.test_take_video (3) Coverage Results" MODIFIED="1499785216585" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
-    <SUITE FILE_PATH="coverage/glider_drone$glider_camera.coverage" NAME="glider_camera Coverage Results" MODIFIED="1499785524531" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider" />
+    <SUITE FILE_PATH="coverage/glider_drone$glider_camera.coverage" NAME="glider_camera Coverage Results" MODIFIED="1499966190971" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/modules" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetests_in_TestGPS.coverage" NAME="Nosetests in TestGPS Coverage Results" MODIFIED="1499792836675" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetest_TestGliderPWMController_test_set_wings__2_.coverage" NAME="Nosetest TestGliderPWMController.test_set_wings (2) Coverage Results" MODIFIED="1499873329652" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
     <SUITE FILE_PATH="coverage/glider_drone$glider_gps.coverage" NAME="glider_gps Coverage Results" MODIFIED="1499698614713" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetests_in_TestGliderPWMController.coverage" NAME="Nosetests in TestGliderPWMController Coverage Results" MODIFIED="1499880194526" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetests_in_test_gliderCamera.coverage" NAME="Nosetests in test_gliderCamera Coverage Results" MODIFIED="1499788034911" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
+    <SUITE FILE_PATH="coverage/glider_drone$glider.coverage" NAME="glider Coverage Results" MODIFIED="1499975093737" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetest_TestGliderCamera_test_take_video__1_.coverage" NAME="Nosetest TestGliderCamera.test_take_video (1) Coverage Results" MODIFIED="1499785058956" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetests_in_TestGliderPWMController__3_.coverage" NAME="Nosetests in TestGliderPWMController (3) Coverage Results" MODIFIED="1499880629534" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetests_in_TestGliderCamera.coverage" NAME="Nosetests in TestGliderCamera Coverage Results" MODIFIED="1499792435333" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
@@ -89,47 +87,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="sat_radio.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/glider/modules/sat_radio.py">
+      <file leaf-file-name="glider.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/glider/glider.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
-              <folding>
-                <element signature="e#0#11#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="glider_gps.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/glider/modules/glider_gps.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="16" column="43" selection-start-line="16" selection-start-column="43" selection-end-line="16" selection-end-column="43" />
-              <folding>
-                <element signature="e#0#14#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="glider_imu.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/glider/modules/glider_imu.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="22" column="50" selection-start-line="22" selection-start-column="50" selection-end-line="22" selection-end-column="50" />
-              <folding>
-                <element signature="e#0#12#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="glider_operations.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/glider/modules/glider_operations.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2714">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="709">
+              <caret line="165" column="0" selection-start-line="165" selection-start-column="0" selection-end-line="165" selection-end-column="0" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -137,11 +99,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="glider_pilot.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/glider/modules/glider_pilot.py">
+      <file leaf-file-name="glider_states.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/glider/glider_states.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="15" column="7" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="7" />
+            <state relative-caret-position="289">
+              <caret line="53" column="13" selection-start-line="53" selection-start-column="13" selection-end-line="53" selection-end-column="13" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -149,13 +111,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="glider_pwm_controller.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/glider/modules/glider_pwm_controller.py">
+      <file leaf-file-name="glider_gps.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/glider/modules/glider_gps.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-912">
-              <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+            <state relative-caret-position="459">
+              <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
               <folding>
-                <element signature="e#0#11#0" expanded="true" />
+                <element signature="e#0#14#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -164,30 +126,34 @@
       <file leaf-file-name="glider_radio.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/glider/modules/glider_radio.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="glider_states.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/glider/modules/glider_states.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2737">
-              <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="glider_telem.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/glider/modules/glider_telem.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+            <state relative-caret-position="552">
+              <caret line="60" column="0" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
               <folding>
-                <element signature="e#147#158#0" expanded="true" />
+                <element signature="e#149#158#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="glider_pilot.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/glider/modules/glider_pilot.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="174">
+              <caret line="48" column="46" selection-start-line="48" selection-start-column="46" selection-end-line="48" selection-end-column="46" />
+              <folding>
+                <element signature="e#0#11#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="glider_imu.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/glider/modules/glider_imu.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="527">
+              <caret line="31" column="25" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="25" />
+              <folding>
+                <element signature="e#0#12#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -210,11 +176,9 @@
         <option value="$PROJECT_DIR$/glider/glider_imu_old.py" />
         <option value="$PROJECT_DIR$/glider/glider_radio.py" />
         <option value="$PROJECT_DIR$/glider/glider_servos.py" />
-        <option value="$PROJECT_DIR$/glider/glider_states.py" />
         <option value="$PROJECT_DIR$/glider/glider_config.py" />
         <option value="$PROJECT_DIR$/glider/glider_telem.py" />
         <option value="$PROJECT_DIR$/glider/glider_operations.py" />
-        <option value="$PROJECT_DIR$/glider/__init__.py" />
         <option value="$PROJECT_DIR$/glider/config.py" />
         <option value="$PROJECT_DIR$/glider/glider_camera.py" />
         <option value="$PROJECT_DIR$/glider/glider_imu.py" />
@@ -222,21 +186,28 @@
         <option value="$PROJECT_DIR$/supervisord.conf" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/Makefile" />
-        <option value="$PROJECT_DIR$/glider/glider_conf.ini" />
         <option value="$PROJECT_DIR$/glider/glider_pwm_controller.py" />
         <option value="$PROJECT_DIR$/glider/test/haversine.py" />
-        <option value="$PROJECT_DIR$/glider/glider.py" />
         <option value="$PROJECT_DIR$/glider/test/test_gliderCamera.py" />
         <option value="$PROJECT_DIR$/glider/test/test_gliderPWMController.py" />
         <option value="$PROJECT_DIR$/glider/test/test_GPS.py" />
         <option value="$PROJECT_DIR$/glider/test/test_IMU.py" />
         <option value="$PROJECT_DIR$/glider/modules/sat_radio.py" />
-        <option value="$PROJECT_DIR$/glider/modules/glider_camera.py" />
-        <option value="$PROJECT_DIR$/glider/modules/glider_gps.py" />
-        <option value="$PROJECT_DIR$/glider/modules/glider_pwm_controller.py" />
         <option value="$PROJECT_DIR$/glider/modules/glider_states.py" />
+        <option value="$PROJECT_DIR$/glider/modules/glider_operations.py" />
+        <option value="$PROJECT_DIR$/glider/glider_utilities.py" />
+        <option value="$PROJECT_DIR$/glider/__init__.py" />
+        <option value="$PROJECT_DIR$/glider/modules/glider_camera.py" />
+        <option value="$PROJECT_DIR$/glider/modules/glider_pwm_controller.py" />
+        <option value="$PROJECT_DIR$/glider/modules/__init__.py" />
+        <option value="$PROJECT_DIR$/glider/modules/glider_gps.py" />
         <option value="$PROJECT_DIR$/glider/modules/glider_telem.py" />
+        <option value="$PROJECT_DIR$/glider/glider_states.py" />
+        <option value="$PROJECT_DIR$/glider/glider_conf.ini" />
+        <option value="$PROJECT_DIR$/glider/modules/glider_radio.py" />
         <option value="$PROJECT_DIR$/glider/modules/glider_imu.py" />
+        <option value="$PROJECT_DIR$/glider/modules/glider_pilot.py" />
+        <option value="$PROJECT_DIR$/glider/glider.py" />
       </list>
     </option>
   </component>
@@ -322,6 +293,24 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="glider_drone" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="glider_drone" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="glider" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="modules" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -339,109 +328,98 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$/glider/test" />
     <property name="js-jscs-nodeInterpreter" value="/usr/local/bin/node" />
   </component>
-  <component name="RunManager" selected="Python.haversine">
-    <configuration default="false" name="Nosetests in TestGliderPWMController" type="tests" factoryName="Nosetests" temporary="true" nameIsGenerated="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/glider/test" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="glider_drone" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/glider/test/test_gliderPWMController.py" />
-      <option name="CLASS_NAME" value="TestGliderPWMController" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_CLASS" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <option name="PARAMS" value="" />
-      <option name="USE_PARAM" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Nosetests in TestGliderPWMController (2)" type="tests" factoryName="Nosetests" temporary="true" nameIsGenerated="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/glider/test" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="glider_drone" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/glider/test/test_gliderPWMController.py" />
-      <option name="CLASS_NAME" value="TestGliderPWMController" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_CLASS" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <option name="PARAMS" value="" />
-      <option name="USE_PARAM" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Nosetests in TestGliderPWMController (1)" type="tests" factoryName="Nosetests" temporary="true" nameIsGenerated="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/glider/test" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="glider_drone" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/glider/test/test_gliderPWMController.py" />
-      <option name="CLASS_NAME" value="TestGliderPWMController" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_CLASS" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <option name="PARAMS" value="" />
-      <option name="USE_PARAM" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Nosetests in TestGliderPWMController (3)" type="tests" factoryName="Nosetests" temporary="true" nameIsGenerated="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/glider/test" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="glider_drone" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/glider/test/test_gliderPWMController.py" />
-      <option name="CLASS_NAME" value="TestGliderPWMController" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_CLASS" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <option name="PARAMS" value="" />
-      <option name="USE_PARAM" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="haversine" type="PythonConfigurationType" factoryName="Python" temporary="true">
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/glider" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.glider">
+    <configuration default="false" name="glider" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/glider/test" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/glider" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="glider_drone" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/glider/test/haversine.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/glider/glider.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="glider_camera" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/glider/modules" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="glider_drone" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/glider/modules/glider_camera.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="glider_pilot" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/glider/modules" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="glider_drone" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/glider/modules/glider_pilot.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="__init__" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/glider/modules" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="glider_drone" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/glider/modules/__init__.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="glider_imu" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/glider/modules" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="glider_drone" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/glider/modules/glider_imu.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -655,19 +633,19 @@
       <method />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Python tests.Nosetests in TestGliderPWMController" />
-      <item index="1" class="java.lang.String" itemvalue="Python tests.Nosetests in TestGliderPWMController (2)" />
-      <item index="2" class="java.lang.String" itemvalue="Python tests.Nosetests in TestGliderPWMController (1)" />
-      <item index="3" class="java.lang.String" itemvalue="Python tests.Nosetests in TestGliderPWMController (3)" />
-      <item index="4" class="java.lang.String" itemvalue="Python.haversine" />
+      <item index="0" class="java.lang.String" itemvalue="Python.glider" />
+      <item index="1" class="java.lang.String" itemvalue="Python.glider_camera" />
+      <item index="2" class="java.lang.String" itemvalue="Python.glider_pilot" />
+      <item index="3" class="java.lang.String" itemvalue="Python.__init__" />
+      <item index="4" class="java.lang.String" itemvalue="Python.glider_imu" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.haversine" />
-        <item index="1" class="java.lang.String" itemvalue="Python tests.Nosetests in TestGliderPWMController (3)" />
-        <item index="2" class="java.lang.String" itemvalue="Python tests.Nosetests in TestGliderPWMController (1)" />
-        <item index="3" class="java.lang.String" itemvalue="Python tests.Nosetests in TestGliderPWMController (2)" />
-        <item index="4" class="java.lang.String" itemvalue="Python tests.Nosetests in TestGliderPWMController" />
+        <item index="0" class="java.lang.String" itemvalue="Python.glider" />
+        <item index="1" class="java.lang.String" itemvalue="Python.glider_pilot" />
+        <item index="2" class="java.lang.String" itemvalue="Python.glider_imu" />
+        <item index="3" class="java.lang.String" itemvalue="Python.__init__" />
+        <item index="4" class="java.lang.String" itemvalue="Python.glider_camera" />
       </list>
     </recent_temporary>
   </component>
@@ -720,18 +698,18 @@
     </history-entry>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="27" width="1920" height="1053" extended-state="1" />
+    <frame x="0" y="27" width="1920" height="1053" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="File Transfer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329718" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24186552" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32982087" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329718" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="File Transfer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329718" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24186552" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32982087" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329718" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329718" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329718" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2013889" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32982087" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32982087" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329718" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -761,7 +739,7 @@
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="5" />
+      <option name="time" value="12" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -961,14 +939,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/glider/glider_conf.ini">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="467">
-          <caret line="45" column="24" selection-start-line="45" selection-start-column="24" selection-end-line="45" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/glider/glider_pwm_controller.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-705">
@@ -1025,22 +995,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/glider/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/glider/config.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/glider/glider_camera.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
@@ -1049,7 +1003,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/glider/glider_operations.py">
+    <entry file="file://$PROJECT_DIR$/glider/glider_utilities.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2573">
           <caret line="188" column="24" selection-start-line="188" selection-start-column="24" selection-end-line="188" selection-end-column="24" />
@@ -1057,44 +1011,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/glider/modules/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/glider/glider.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="25" selection-start-line="16" selection-start-column="25" selection-end-line="16" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/glider/test/test_gliderCamera.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
           <caret line="3" column="19" selection-start-line="3" selection-start-column="12" selection-end-line="3" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/glider/test/test_gliderPWMController.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="12" selection-start-line="1" selection-start-column="12" selection-end-line="1" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/glider/test/test_GPS.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="20" selection-start-line="1" selection-start-column="20" selection-end-line="1" selection-end-column="20" />
           <folding />
         </state>
       </provider>
@@ -1107,92 +1027,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/glider/modules/glider_camera.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-827">
-          <caret line="25" column="26" selection-start-line="25" selection-start-column="26" selection-end-line="25" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/glider/modules/glider_pilot.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="7" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="7" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/glider/modules/glider_pwm_controller.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-912">
-          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/glider/modules/glider_radio.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/glider/modules/glider_states.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2737">
-          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/glider/modules/glider_telem.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding>
-            <element signature="e#147#158#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/glider/modules/sat_radio.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/glider/modules/glider_gps.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="43" selection-start-line="16" selection-start-column="43" selection-end-line="16" selection-end-column="43" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/glider/modules/glider_operations.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2714">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/glider/imu_reader.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -1201,12 +1035,162 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/glider/modules/sat_radio.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="397">
+          <caret line="46" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="135" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/glider/glider_utilities.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1207">
+          <caret line="71" column="0" selection-start-line="71" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/glider/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="8" selection-end-column="29" />
+          <folding>
+            <element signature="e#17#26#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/glider/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="6" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/glider/modules/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="39" selection-start-line="4" selection-start-column="39" selection-end-line="4" selection-end-column="39" />
+          <folding>
+            <element signature="e#0#9#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/glider/modules/glider_telem.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="107" column="51" selection-start-line="103" selection-start-column="12" selection-end-line="107" selection-end-column="51" />
+          <folding>
+            <element signature="e#147#158#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/glider/test/test_GPS.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="42" selection-start-line="11" selection-start-column="39" selection-end-line="11" selection-end-column="42" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/glider/test/test_gliderPWMController.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="12" selection-start-line="1" selection-start-column="12" selection-end-line="1" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/glider/modules/glider_pwm_controller.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="365">
+          <caret line="102" column="25" selection-start-line="102" selection-start-column="8" selection-end-line="102" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/glider/glider_conf.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="246">
+          <caret line="65" column="17" selection-start-line="65" selection-start-column="17" selection-end-line="65" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/glider/modules/glider_camera.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-17">
+          <caret line="23" column="64" selection-start-line="23" selection-start-column="25" selection-end-line="23" selection-end-column="64" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/glider/modules/glider_radio.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="552">
+          <caret line="60" column="0" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
+          <folding>
+            <element signature="e#149#158#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/glider/modules/glider_imu.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="50" selection-start-line="22" selection-start-column="50" selection-end-line="22" selection-end-column="50" />
+        <state relative-caret-position="527">
+          <caret line="31" column="25" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="25" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/glider/modules/glider_pilot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="174">
+          <caret line="48" column="46" selection-start-line="48" selection-start-column="46" selection-end-line="48" selection-end-column="46" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/glider/glider.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="709">
+          <caret line="165" column="0" selection-start-line="165" selection-start-column="0" selection-end-line="165" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/glider/glider_states.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="53" column="13" selection-start-line="53" selection-start-column="13" selection-end-line="53" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/glider/modules/glider_gps.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
           </folding>
         </state>
       </provider>

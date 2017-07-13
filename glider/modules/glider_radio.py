@@ -5,27 +5,22 @@
 # 
 ##############################################
 import os
-import time
-import serial
 import logging
 import traceback
-from xbee import XBee
-from threading import Thread
-from sat_radio import SatRadio
-
-# GUIDE
-# http://ava.upuaut.net/?p=768
+from . import glider_config
 
 ##########################################
 # GLOBALS
 ##########################################
-LOG = setup_custom_logger('radio')
+LOG = logging.getLogger('radio')
 
-class GliderRadio(SatRadio):
+class GliderRadio():
     
-    def __init__(self, port, callsign, baud_rate=38400, callback=None):
+    def __init__(self, callback):
         self.ready = True
-        SatRadio.__init__(self, port, callsign, baud_rate=baud_rate, callback=callback)
+        port = glider_config.get("radio", "port")
+        callsign = glider_config.get("radio", "callsign")
+        baud_rate = glider_config.get("radio", "baud_rate")
 
     def send_data(self, data):
         address = self.ADDR_GLIDER_GROUNDSTATION
@@ -58,5 +53,10 @@ class GliderRadio(SatRadio):
         except Exception:
             LOG.critical(traceback.format_exc())
 
+    def start(self):
+        pass
+
+    def stop(self):
+        pass
 
 #---------- END CLASS -------------

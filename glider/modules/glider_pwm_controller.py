@@ -4,7 +4,7 @@ import logging
 # noinspection PyUnresolvedReferences
 import Adafruit_PCA9685
 from threading import Thread
-from glider.config import glider_config
+from . import glider_config
 
 LOG = logging.getLogger('glider_servo_controller')
 

@@ -10,6 +10,7 @@ import logging
 import traceback
 import dateutil.parser
 from threading import Thread
+from . import glider_config
 
 ##########################################
 # GLOBALS
@@ -18,7 +19,12 @@ LOG = logging.getLogger("Telemetry")
 
 
 class TelemetryHandler():
+    """Telemetry builder.
 
+    Because this is run in the background periodically, it needs access
+    to the glider modules (like IMU, GPS). Have to give that on init()
+    unfortunately.
+    """
     def __init__(self, radio, imu, pilot, gps):
         self.threadAlive = True
 
@@ -29,12 +35,13 @@ class TelemetryHandler():
         self.glider_state = None
         self.alien_gps_dump = {}
 
-        self.glider_data_interval = 1
         self.glider_data_lastsent = time.time()
-        self.telemetry_interval = 20
         self.telemetry_lastsent = time.time()
-        self.aliendatadump_interval = 300
         self.aliendatadump_lastsent = time.time()
+
+        self.glider_data_interval = glider_config.getint("telemetry", "interval_data")
+        self.telemetry_interval = glider_config.getint("telemetry", "interval_telem")
+        self.aliendatadump_interval = glider_config.getint("telemetry", "interval_aliendump")
 
     def genTelemStr_orientation(self):
         telStr = "O:%2.1f_%2.1f_%2.1f" % (
@@ -66,7 +73,7 @@ class TelemetryHandler():
             try:
                 hhmmss = int(dateutil.parser.parse(self.gps.gpsd.utc).strftime("%H%M%S"))
             except:
-                pass
+                LOG.warning("Can't generate gps telemetry")
         lon_dec_deg, lat_dec_deg = self.gps.getLonLatDeg()
         alt = gps_fix.altitude
         lat_dil = gps_fix.epx

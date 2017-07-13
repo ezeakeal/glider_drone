@@ -6,7 +6,7 @@ import picamera
 from PIL import Image
 from datetime import datetime
 from threading import Thread
-from glider.config import glider_config
+from . import glider_config
 
 LOG = logging.getLogger("Camera")
 LOG.setLevel(logging.DEBUG)

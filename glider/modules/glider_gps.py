@@ -5,7 +5,7 @@ from gps3.agps3threaded import AGPS3mechanism
 LOG = logging.getLogger('gps')
 
 
-class GPS_USB(object):
+class GPS(object):
 
     def __init__(self):
         # Instantiate AGPS3 Mechanisms

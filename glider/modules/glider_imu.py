@@ -1,6 +1,6 @@
 import redis
 import logging
-from glider.config import glider_config
+from modules import glider_config
 
 ##############################################
 # GLOBALS
@@ -25,14 +25,20 @@ class IMU(object):
             db=glider_config.get("redis_client", "db")
         )
 
+    def _val_or_default(self, name, default=0.0):
+        val = self.redis_client.get(name)
+        if not val:
+            return default
+        return float(val)
+
     @property
     def roll(self):
-        return self.redis_client.get("roll")
+        return self._val_or_default("roll")
 
     @property
     def yaw(self):
-        return self.redis_client.get("yaw")
+        return self._val_or_default("yaw")
 
     @property
     def pitch(self):
-        return self.redis_client.get("pitch")
+        return self._val_or_default("pitch")

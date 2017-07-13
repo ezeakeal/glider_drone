@@ -2,12 +2,13 @@ import time
 import math
 import logging
 from threading import Thread
+from . import glider_config
 
 ##############################################
 # GLOBALS
 ##############################################
 LOG = logging.getLogger('pilot')
-
+deg = math.degrees # Tired of writing this so much
 
 class Pilot(object):
     """
@@ -15,155 +16,119 @@ class Pilot(object):
     coordinates into intended wing angles
     """
 
-    def __init__(self, IMU, 
-        desired_yaw=0, desired_pitch=-0.52, 
-        turn_severity=1.2, servo_range=0.5236,
-        destination=[54.816069,-6.052094],
-        location=[52.254197,-7.181244],
-        wing_calc_interval=0.02):
+    def __init__(self, IMU):
         
         self.IMU = IMU
         self.threadAlive = False
         
-        self.servo_range = servo_range
-        self.wing_param = {
-            "left": {"center": 90, "current": 0, "intended": 0},
-            "right": {"center": 96, "current": 0, "intended": 0}
-        }
+        self.servo_range = glider_config.getfloat("flight", "servo_range")
+        self.wing_flat_angle_l = glider_config.getfloat("flight", "wing_flat_angle_l")
+        self.wing_flat_angle_r = glider_config.getfloat("flight", "wing_flat_angle_r")
 
-        self.turn_severity = turn_severity
-        self.desired_pitch = desired_pitch
-        self.desired_yaw = desired_yaw
+        self.wing_angles = [self.wing_flat_angle_l, self.wing_flat_angle_r]
 
-        self.destination = destination
-        self.location = location
+        self.turn_severity = glider_config.getfloat("flight", "turn_severity")
+        self.desired_pitch_deg = glider_config.getfloat("flight", "desired_pitch_deg")
+        self.desired_yaw = 0
 
-        self.wing_calc_interval = wing_calc_interval
-
-        LOG.debug("Turn Sev: %2.2f" % turn_severity)
-        LOG.debug("Servo Range: %2.2f" % math.degrees(servo_range))
-        LOG.debug("Desired Pitch: %2.2f" % math.degrees(desired_pitch))
-
-
-    def updatePitch(self, angle):
-        LOG.warning("Updated desired pitch: %s" % angle)
-        self.desired_pitch = angle
-
-
-    def updateTurnSev(self, angle):
-        LOG.warning("Updated turn severity: %s" % angle)
-        self.turn_severity = angle
-
-
-    def getWingCenterAndRange(self):
-        lcenter = self.wing_param['left']['center']
-        rcenter = self.wing_param['right']['center']
-        servoRange = math.degrees(self.servo_range)
-        return lcenter, rcenter, servoRange
-
+        self.destination = glider_config.get("flight", "initial_destination").split(",")
+        self.location = [0,0]
 
     def start(self):
-        pilotThread = Thread( target=self.updateIntendWingAngle, args=() )
-        self.threadAlive = True
+        pilotThread = Thread(target=self.update_wing_angles, args=())
         LOG.info("Starting up Pilot thread now")
+        self.threadAlive = True
         pilotThread.start()
-
 
     def stop(self):
         self.threadAlive = False
 
-
     def scaleAbsToLimit(self, val, limit):
-        if val > limit:
-            val = limit
-        elif val < -limit:
-            val = -limit
-        return val
+        """Little helper to enforce positive/negative limits"""
+        sign = lambda x: (1, -1)[val < 0]
+        return min(abs(val),limit) * sign(val)
 
-
-    def getDesiredRoll(self, yawDelta_rad):
-        # Turn severity defines how much the glider will roll 
-        # proportional to the difference in desired direction
-        # This multiplies the apparent difference in angle, as 
-        # tan will ramp up to +/- infinity at either +/- 90deg
-        # This gets limited later
+    def get_desired_roll(self, yawDelta_rad):
         yawDelta_rad *= self.turn_severity 
-        # Limit the delta to pi/2 on either side
+        # The maximum amount of turning we consider for adjusting roll, is 90 degrees
         yawDelta_rad = self.scaleAbsToLimit(yawDelta_rad, math.pi/2)
-        # Get the tan response to this figure 
-        tanScale = math.tan(yawDelta_rad)
-        tanScale = self.scaleAbsToLimit(tanScale, 1)
-        roll = self.servo_range * tanScale
-        return roll
+        # Get the tan of the difference in heading (gentle ramp up to infinity)
+        roll_angle = math.tan(yawDelta_rad)
+        # Scale the tan of that angle to 1
+        roll_angle= self.scaleAbsToLimit(roll_angle, 1)
+        return roll_angle
 
-
-    def updateIntendWingAngle(self):
+    def update_wing_angles(self):
         while self.threadAlive:
             # Get the readings from the IMU
             current_pitch = self.IMU.pitch
             current_roll = self.IMU.roll
             current_yaw = self.IMU.yaw
             LOG.debug("\nCalculating wing angles")
-            LOG.debug("P(%2.1f) R(%2.1f) Y(%2.1f)" % (
-                math.degrees(current_pitch), math.degrees(current_roll), math.degrees(current_yaw)))
+            LOG.debug("Current P(%2.1f) R(%2.1f) Y(%2.1f)" % (
+                deg(current_pitch), deg(current_roll), deg(current_yaw)))
+
             # Initialize the wing adjustments at 0
             # We will add up all adjustments, then scale them to the ranges of the servos.
             wing_left = 0
             wing_right = 0
+            LOG.debug("Flap delta (initial) = L(%2.1f) R(%2.1f)" % (deg(wing_left), deg(wing_right)))
+
             # Now adjust for pitch
-            deltaPitch = self.desired_pitch - current_pitch
+            deltaPitch = self.desired_pitch_deg - current_pitch
+            LOG.debug("Pitch Current/Desired/Delta: %2.1f/%2.1f" % (deg(current_pitch), deg(self.desired_pitch_deg)))
             wing_left += deltaPitch # Bring both wings DOWN
             wing_right += deltaPitch # Bring both wings DOWN
-            LOG.debug("Desired/Current: %2.1f/%2.1f" % (math.degrees(self.desired_pitch), math.degrees(current_pitch)))
-            LOG.debug("Delta pitch: %2.1f" % (math.degrees(deltaPitch)))
-            LOG.debug("Delta wings = L(%2.1f) R(%2.1f)" % (math.degrees(wing_left), math.degrees(wing_right)))
+            LOG.debug("Flap delta (pitched) = L(%2.1f) R(%2.1f)" % (deg(wing_left), deg(wing_right)))
 
-            # Calculate a desired roll from our yaw
-            LOG.debug("Desired/Current yaw: %2.2f/%2.2f" % (math.degrees(self.desired_yaw), math.degrees(current_yaw)))
+            # Calculate the desired change in our heading(yaw)
             deltaYaw = self.desired_yaw - current_yaw
             deltaYaw = (deltaYaw + math.pi) % (2*math.pi) - (math.pi)
-            desired_roll = self.getDesiredRoll(deltaYaw)
-            LOG.debug("Delta yaw: %2.1f (roll: %2.1f)" % (math.degrees(deltaYaw), math.degrees(desired_roll)))
+            LOG.debug("Yaw Current/Desired: %2.2f/%2.2f" % (deg(current_yaw), deg(self.desired_yaw)))
+
+            # Calculate the desired roll to make that happen
+            desired_roll = self.get_desired_roll(deltaYaw)
+            LOG.debug("Roll Current/Desired: %2.1f/%2.1f)" % (deg(current_roll), deg(desired_roll)))
 
             deltaRoll = desired_roll - current_roll # This is radians
-            LOG.debug("Delta roll: %2.1f" % (math.degrees(deltaRoll)))
-
-            # Adjust the wings again for roll
             wing_left -= deltaRoll
             wing_right += deltaRoll
-            LOG.debug("Delta wings = L(%2.1f) R(%2.1f)" % (math.degrees(wing_left), math.degrees(wing_right)))
+            LOG.debug("Flap delta (rolled) = L(%2.1f) R(%2.1f)" % (deg(wing_left), deg(wing_right)))
 
-            # Scale these angles now based on maximum ranges of the servos
+            # Find how much we're trying to change the flap angles, then scale to fit that change
             maxAngle = max(math.fabs(wing_left), math.fabs(wing_right))
+            # Copy the wing angles so we don't modify the values in place
             wing_left_scaled = wing_left
             wing_right_scaled = wing_right
-            if maxAngle > self.servo_range:
-                angleScale = maxAngle/self.servo_range
+            # Scale the angles now to not exceed the max servo range
+            max_servo_range_radians = math.radians(self.servo_range)
+            if maxAngle > max_servo_range_radians:
+                angleScale = maxAngle/max_servo_range_radians
                 wing_left_scaled /= angleScale
                 wing_right_scaled /= angleScale
-            LOG.debug("Scaled wing deltas = L(%2.1f) R(%2.1f)" % (math.degrees(wing_left_scaled), math.degrees(wing_right_scaled)))
+            LOG.debug("Scaled flap delta = L(%2.1f) R(%2.1f)" % (deg(wing_left_scaled), deg(wing_right_scaled)))
 
             # Calculate servo degrees
-            self.wing_param['left']['intended'] = int(self.wing_param['left']['center'] + math.degrees(wing_left_scaled))
-            self.wing_param['right']['intended'] = int(self.wing_param['right']['center'] - math.degrees(wing_right_scaled))
-            LOG.debug("Wing Angles: %02.1f %02.1f" % (
-                self.wing_param['left']['intended'], self.wing_param['right']['intended']))
-            time.sleep(self.wing_calc_interval)
+            self.wing_angles = [
+                self.wing_flat_angle_l + deg(wing_left_scaled),
+                self.wing_flat_angle_r - deg(wing_right_scaled), # inverted servo on right wing
+            ]
 
-    
-    def updateLocation(self, lat, lon):
-        self.location[0] = lat
-        self.location[1] = lon
-        return self.location
+            # Log the update and sleep for the wing calc interval
+            LOG.debug("Wing Angles: %02.1f %02.1f" % (self.wing_angles[0], self.wing_angles[1]))
+            return self.wing_angles
 
+    def update_destination(self, lat, lon):
+        """Method to enforce that the heading is updated when current location is updated"""
+        self.destination = [float(lat), float(lon)]
+        self.update_desired_heading()
 
-    def updateDestination(self, lat, lon):
-        self.destination[0] = float(lat)
-        self.destination[1] = float(lon)
-        return self.destination
+    def update_location(self, lat, lon):
+        """Method to enforce that the heading is updated when current location is updated"""
+        self.location = [lat, lon]
+        self.update_desired_heading()
 
-
-    def updateDesiredYaw(self):
+    def update_desired_heading(self):
         # http://stackoverflow.com/questions/4913349/haversine-formula-in-python-bearing-and-distance-between-two-gps-points
         x1, y1 = float(self.location[0]), float(self.location[1])
         x2, y2 = float(self.destination[0]), float(self.destination[1])
@@ -180,16 +145,5 @@ class Pilot(object):
             math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(lon2-lon1)
         )
         bearing = (bearing + (2*math.pi)) % (2*math.pi)
-        LOG.warning("ANG %s" % math.degrees(bearing))
+        LOG.warning("ANG %s" % deg(bearing))
         self.desired_yaw = bearing
-
-
-    def get_servo_angles(self):
-        wl = self.wing_param['left']['intended']
-        wr = self.wing_param['right']['intended']
-        cl = self.wing_param['left']['current']
-        cr = self.wing_param['right']['current']
-        if (wl != cl) or (wr != cr) or True:
-            self.wing_param['left']['current'] = wl
-            self.wing_param['right']['current'] = wr
-            return [wl, wr]
