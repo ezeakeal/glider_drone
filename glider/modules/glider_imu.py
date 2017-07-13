@@ -5,7 +5,7 @@ from modules import glider_config
 ##############################################
 # GLOBALS
 ##############################################
-LOG = logging.getLogger("IMU")
+LOG = logging.getLogger("glider.%s" % __name__)
 
 class IMU(object):
 

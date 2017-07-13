@@ -6,7 +6,7 @@ import Adafruit_PCA9685
 from threading import Thread
 from . import glider_config
 
-LOG = logging.getLogger('glider_servo_controller')
+LOG = logging.getLogger("glider.%s" % __name__)
 
 
 class GliderPWMController(object):

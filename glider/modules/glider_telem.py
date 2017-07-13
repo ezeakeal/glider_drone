@@ -15,7 +15,7 @@ from . import glider_config
 ##########################################
 # GLOBALS
 ##########################################
-LOG = logging.getLogger("Telemetry")
+LOG = logging.getLogger("glider.%s" % __name__)
 
 
 class TelemetryHandler():
@@ -51,9 +51,7 @@ class TelemetryHandler():
         return telStr
 
     def genTelemStr_wing(self):
-        telStr = "W:%2.1f_%2.1f" % (
-            self.pilot.wing_param['left']['current'],
-            self.pilot.wing_param['right']['current'])
+        telStr = "W:%2.1f_%2.1f" % ( self.pilot.wing_angles[0], self.pilot.wing_angles[1])
         return telStr
 
     def send_glider_data(self):

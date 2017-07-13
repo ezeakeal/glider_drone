@@ -8,8 +8,7 @@ from datetime import datetime
 from threading import Thread
 from . import glider_config
 
-LOG = logging.getLogger("Camera")
-LOG.setLevel(logging.DEBUG)
+LOG = logging.getLogger("glider.%s" % __name__)
 
 
 class GliderCamera(object):

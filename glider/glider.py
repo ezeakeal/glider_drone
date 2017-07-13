@@ -1,5 +1,6 @@
 import os
 import logging
+import logging.config
 import subprocess
 import traceback
 
@@ -13,8 +14,14 @@ from modules.glider_telem import TelemetryHandler
 
 import glider_states as gstates
 
-LOG = logging.getLogger('core')
+##########################################
+# Configure logging
+##########################################
+base_dir = os.path.dirname(__file__)
+conf_path = os.path.join(base_dir, "glider_conf.ini")
+logging.config.fileConfig(conf_path)
 
+LOG = logging.getLogger("glider")
 
 # ##########################################
 # # GLIDER UTILITIES

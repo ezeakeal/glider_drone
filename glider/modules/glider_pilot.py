@@ -7,7 +7,7 @@ from . import glider_config
 ##############################################
 # GLOBALS
 ##############################################
-LOG = logging.getLogger('pilot')
+LOG = logging.getLogger("glider.%s" % __name__)
 deg = math.degrees # Tired of writing this so much
 
 class Pilot(object):

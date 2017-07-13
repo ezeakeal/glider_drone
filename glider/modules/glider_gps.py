@@ -2,7 +2,7 @@ import logging
 from gps3.agps3threaded import AGPS3mechanism
 # https://pypi.python.org/pypi/gps3/
 
-LOG = logging.getLogger('gps')
+LOG = logging.getLogger("glider.%s" % __name__)
 
 
 class GPS(object):
