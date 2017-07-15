@@ -54,6 +54,10 @@ class GliderPWMController(object):
         servo_update_thread.start()
 
     def stop(self):
+        centre_l = glider_config.getfloat("flight", "wing_flat_angle_l")
+        centre_r = glider_config.getfloat("flight", "wing_flat_angle_r")
+        self.set_wings(centre_l, centre_r)
+        time.sleep(1)
         self.threadAlive = False
 
     def update_servo_angles(self):

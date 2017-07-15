@@ -72,18 +72,17 @@ class Pilot(object):
             # We will add up all adjustments, then scale them to the ranges of the servos.
             wing_left = 0
             wing_right = 0
-            LOG.debug("Flap delta (initial) = L(%2.1f) R(%2.1f)" % (deg(wing_left), deg(wing_right)))
 
             # Now adjust for pitch
-            deltaPitch = self.desired_pitch_deg - current_pitch
-            LOG.debug("Pitch Current/Desired/Delta: %2.1f/%2.1f" % (deg(current_pitch), deg(self.desired_pitch_deg)))
+            deltaPitch = math.radians(self.desired_pitch_deg) - current_pitch
+            LOG.debug("Pitch Current/Desired/Delta: %2.1f/%2.1f/%2.1f" % (deg(current_pitch), self.desired_pitch_deg, deg(deltaPitch)))
             wing_left += deltaPitch # Bring both wings DOWN
             wing_right += deltaPitch # Bring both wings DOWN
             LOG.debug("Flap delta (pitched) = L(%2.1f) R(%2.1f)" % (deg(wing_left), deg(wing_right)))
 
             # Calculate the desired change in our heading(yaw)
             deltaYaw = self.desired_yaw - current_yaw
-            deltaYaw = (deltaYaw + math.pi) % (2*math.pi) - (math.pi)
+            deltaYaw = (deltaYaw + math.pi) % (2*math.pi) - (math.pi) # https://stackoverflow.com/a/7869457
             LOG.debug("Yaw Current/Desired: %2.2f/%2.2f" % (deg(current_yaw), deg(self.desired_yaw)))
 
             # Calculate the desired roll to make that happen
@@ -91,8 +90,8 @@ class Pilot(object):
             LOG.debug("Roll Current/Desired: %2.1f/%2.1f)" % (deg(current_roll), deg(desired_roll)))
 
             deltaRoll = desired_roll - current_roll # This is radians
-            wing_left -= deltaRoll
-            wing_right += deltaRoll
+            wing_left += deltaRoll
+            wing_right -= deltaRoll
             LOG.debug("Flap delta (rolled) = L(%2.1f) R(%2.1f)" % (deg(wing_left), deg(wing_right)))
 
             # Find how much we're trying to change the flap angles, then scale to fit that change
@@ -111,7 +110,7 @@ class Pilot(object):
             # Calculate servo degrees
             self.wing_angles = [
                 self.wing_flat_angle_l + deg(wing_left_scaled),
-                self.wing_flat_angle_r - deg(wing_right_scaled), # inverted servo on right wing
+                self.wing_flat_angle_r + deg(wing_right_scaled),
             ]
 
             # Log the update and sleep for the wing calc interval

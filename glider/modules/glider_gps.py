@@ -10,6 +10,7 @@ LOG = logging.getLogger("glider.%s" % __name__)
 
 
 class GPS(object):
+    fake_location_file = None
 
     def __init__(self):
         # Instantiate AGPS3 Mechanisms

@@ -4,16 +4,6 @@ import logging.config
 import subprocess
 import traceback
 
-from modules.glider_gps import GPS
-from modules.glider_camera import GliderCamera
-from modules.glider_imu import IMU
-from modules.glider_pilot import Pilot
-from modules.glider_pwm_controller import GliderPWMController
-from modules.glider_radio import GliderRadio
-from modules.glider_telem import TelemetryHandler
-
-import glider_states as gstates
-
 ##########################################
 # Configure logging
 ##########################################
@@ -23,6 +13,19 @@ logging.config.fileConfig(conf_path)
 
 LOG = logging.getLogger("glider")
 logging.getLogger("Adafruit_I2C").setLevel(logging.WARN)
+
+#########################################
+# Import glider modules and states
+#########################################
+from modules.glider_gps import GPS
+from modules.glider_camera import GliderCamera
+from modules.glider_imu import IMU
+from modules.glider_pilot import Pilot
+from modules.glider_pwm_controller import GliderPWMController
+from modules.glider_radio import GliderRadio
+from modules.glider_telem import TelemetryHandler
+
+import glider_states as gstates
 
 #
 #     #####################################################################
@@ -98,7 +101,7 @@ class Glider(object):
     def speak(self, text):
         LOG.info("Speaking %s" % text)
         with open(os.devnull, "w") as devnull:
-            subprocess.call(["espeak", "-ven+f3", "-m", "-p", "70", "-s", "180", text], stdout=devnull, stderr=devnull)
+            subprocess.call(["espeak", "-ven-us", "-m", "-p", "70", "-s", "180", text], stdout=devnull, stderr=devnull)
 
     def command_handler(self, *args, **kwargs):
         LOG.info("Handling command: %s %s" % (args, kwargs))
@@ -132,6 +135,9 @@ class Glider(object):
                 #         newState = overrideState
                 #         LOG.debug("Set override state: %s" % overrideState)
 
+            except KeyboardInterrupt:
+                self.stop()
+                raise # Don't go to error state, close the program!
             except:
                 LOG.error(traceback.print_exc())
                 self.current_state = "ERROR"

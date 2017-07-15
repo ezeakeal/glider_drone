@@ -5,6 +5,7 @@ import subprocess
 
 from config import glider_config
 LOG = logging.getLogger("glider.states")
+LOG.setLevel(logging.DEBUG)
 
 
 ##########################################
@@ -47,20 +48,39 @@ class healthCheck(gliderState):
         super(healthCheck, self).__init__()
         self.nextState = "ASCENT"
         self.sleepTime = 5
+        self.wings_tested = False
 
     def execute(self, glider_instance):
+        # Check servo range
+        if not self.wings_tested:
+            self.wing_test(glider_instance)
         # Get the location data, figure if locked
         location = glider_instance.gps.data
-        locationLocked = (location.epx < 20 and location.epy < 20)
+        max_error = max(location.epx, location.epy)
+        locationLocked = max_error < 50
         # Get battery data. Figure if healthy
         if not locationLocked:
-            LOG.warning("Location is not locked yet")
+            LOG.warning("Location is not locked yet (max error = %s)" % max_error)
         else:
             # Seems all is good
             LOG.info("Health Check Passed")
-            glider_instance.speak("Health Check Complete")
             glider_instance.telemetry_handler.set_message("Health Good")
             self.readyToSwitch = True
+
+    def wing_test(self, glider_instance):
+        self.wings_tested = True
+        centre_l = glider_config.getfloat("flight", "wing_flat_angle_l")
+        centre_r = glider_config.getfloat("flight", "wing_flat_angle_r")
+        servo_max = glider_config.getfloat("flight", "servo_range")
+        glider_instance.speak("Wing test")
+        time.sleep(1)
+        glider_instance.speak("Centre")
+        glider_instance.pwm_controller.set_wings(centre_l, centre_r)
+        glider_instance.speak("Max")
+        glider_instance.pwm_controller.set_wings(centre_l+servo_max, centre_r+servo_max)
+        glider_instance.speak("Min")
+        glider_instance.pwm_controller.set_wings(centre_l - servo_max, centre_r - servo_max)
+
 
 #-----------------------------------
 #         Ascent
@@ -138,8 +158,7 @@ class glide(gliderState):
             # Get our new location
             self.location = glider_instance.gps.data
             if self.location.lat == "n/a":
-                LOG.warning("Bad location, pausing for 5 seconds")
-                time.sleep(5)
+                LOG.warning("Bad location, course unchanged")
                 return
             glider_instance.pilot.update_location(self.location.lat, self.location.lon)
         # Update the servos

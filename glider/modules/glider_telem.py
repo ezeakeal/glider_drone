@@ -8,6 +8,8 @@ import time
 import math
 import logging
 import traceback
+
+import datetime
 import dateutil.parser
 from threading import Thread
 from . import glider_config
@@ -65,24 +67,22 @@ class TelemetryHandler():
 
     def send_telemetry(self):
         LOG.debug("Sending glider telemetry")
-        gps_fix = self.gps.getFix()
-        hhmmss = int(time.strftime("%H%M%S"))
-        if gps_fix:
-            try:
-                hhmmss = int(dateutil.parser.parse(self.gps.gpsd.utc).strftime("%H%M%S"))
-            except:
-                LOG.warning("Can't generate gps telemetry")
-        lon_dec_deg, lat_dec_deg = self.gps.getLonLatDeg()
-        alt = gps_fix.altitude
-        lat_dil = gps_fix.epx
-        if math.isnan(lat_dil):
-            lat_dil = 99.99
-        if math.isnan(alt):
-            alt = 0
+        location_data = self.gps.data
+        hhmmss = datetime.datetime.now()
+        try:
+            hhmmss = dateutil.parser.parse(location_data.time)
+        except:
+            LOG.warning("Can't generate gps telemetry")
         temp1 = 0
         temp2 = 0
         pressure = 0
-        self.radio.send_telem(hhmmss, lat_dec_deg, lon_dec_deg, lat_dil, alt, temp1, temp2, pressure)
+        self.radio.send_telem(
+            hhmmss,
+            location_data.lat, location_data.lon,
+            location_data.epx, location_data.alt,
+            temp1, temp2,
+            pressure
+        )
 
     def send_aliendatadump(self):
         LOG.info("Echoing %s telemetry packets" % len(self.alien_gps_dump.keys()))

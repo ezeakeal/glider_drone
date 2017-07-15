@@ -46,12 +46,12 @@ class SatRadio(object):
         # Time
         telem_str += hhmmss.strftime("|%H%M%S") if hhmmss else "|      "
         # GPS stuff
-        telem_str += "|%c" % ("N" if lat_dec_deg > 0 else "S") if lat_dec_deg else "| "
-        telem_str += "|%08.05f" % abs(lat_dec_deg) if lat_dec_deg else "|        "
-        telem_str += "|%c" % ("E" if lon_dec_deg > 0 else "W") if lon_dec_deg else "| "
-        telem_str += "|%09.05f" % abs(lon_dec_deg) if lon_dec_deg else "|         "
-        telem_str += "|%05.02f" % lat_dil if lat_dil else "|     "
-        telem_str += "|%08.02f" % alt if alt else "|        "
+        telem_str += "|%c" % ("N" if lat_dec_deg > 0 else "S") if type(lat_dec_deg) != str else "| "
+        telem_str += "|%08.05f" % abs(lat_dec_deg) if type(lat_dec_deg) != str else "|        "
+        telem_str += "|%c" % ("E" if lon_dec_deg > 0 else "W") if type(lon_dec_deg) != str else "| "
+        telem_str += "|%09.05f" % abs(lon_dec_deg) if type(lon_dec_deg) != str else "|         "
+        telem_str += "|%05.02f" % lat_dil if type(lat_dil) != str else "|     "
+        telem_str += "|%08.02f" % alt if type(alt) != str else "|        "
         # Temperatures
         telem_str += "|%+08.03f" % temp1 if temp1 else "|        "
         telem_str += "|%+08.03f" % temp2 if temp2 else "|        "
