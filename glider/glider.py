@@ -60,7 +60,7 @@ class Glider(object):
         "RECOVER": gstates.recovery(),
         "ERROR": gstates.errorState()
     }
-    current_state = "FLIGHT"
+    current_state = "HEALTH_CHECK"
 
     def __init__(self):
         # Initialize all modules

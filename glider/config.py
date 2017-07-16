@@ -7,4 +7,3 @@ conf_path = os.path.join(base_dir, "glider_conf.ini")
 
 glider_config= ConfigParser.ConfigParser()
 glider_config.read(conf_path)
-

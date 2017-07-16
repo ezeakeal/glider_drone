@@ -78,8 +78,12 @@ class healthCheck(gliderState):
         glider_instance.pwm_controller.set_wings(centre_l, centre_r)
         glider_instance.speak("Max")
         glider_instance.pwm_controller.set_wings(centre_l+servo_max, centre_r+servo_max)
+        glider_instance.speak("Centre")
+        glider_instance.pwm_controller.set_wings(centre_l, centre_r)
         glider_instance.speak("Min")
         glider_instance.pwm_controller.set_wings(centre_l - servo_max, centre_r - servo_max)
+        glider_instance.speak("Centre")
+        glider_instance.pwm_controller.set_wings(centre_l, centre_r)
 
 
 #-----------------------------------
@@ -183,6 +187,10 @@ class parachute(gliderState):
         glider_instance.pilot.desired_pitch_deg = -80
         if self.chute_delay < 1:
             glider_instance.pwm_controller.release_parachute()
+            glider_instance.pwm_controller.set_wings(
+                glider_config.getfloat("flight", "wing_flat_angle_l"),
+                glider_config.getfloat("flight", "wing_flat_angle_r")
+            )
         glider_instance.pilot.update_wing_angles()
         self.chute_delay -= 1
 
