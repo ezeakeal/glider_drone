@@ -5,7 +5,6 @@ import subprocess
 
 from config import glider_config
 LOG = logging.getLogger("glider.states")
-LOG.setLevel(logging.DEBUG)
 
 
 ##########################################

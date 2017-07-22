@@ -31,7 +31,7 @@ class Pilot(object):
         self.desired_pitch_deg = glider_config.getfloat("flight", "desired_pitch_deg")
         self.desired_yaw = 0
 
-        self.destination = glider_config.get("flight", "initial_destination").split(",")
+        self.destination = [float(i) for i in glider_config.get("flight", "initial_destination").split(",")]
         self.location = [0,0]
 
     def start(self):

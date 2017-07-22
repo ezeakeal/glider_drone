@@ -42,8 +42,8 @@ print("Recommended Poll Interval: %dmS\n" % poll_interval)
 while True:
   if imu.IMURead():
     r,p,y = imu.getFusionData()
-    redis_client.set("pitch", p)
     redis_client.set("roll", r)
+    redis_client.set("pitch", p)
     redis_client.set("yaw", y)
 
     time.sleep(poll_interval*1.0/1000.0)

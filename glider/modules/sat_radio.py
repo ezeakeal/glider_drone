@@ -7,7 +7,7 @@ LOG = logging.getLogger("glider.%s" % __name__)
 
 class SatRadio(object):
     BROADCAST = 0xFF
- 
+
     def __init__(self, port, address, callsign, baud_rate=38400, callback=None):
         self.port = port
         self.baud_rate = baud_rate
@@ -26,7 +26,7 @@ class SatRadio(object):
         # Could do something here, I dunno.
         pass
 
- 
+
     def _callback(self, data):
         try:
             self._rx_callback(data)
@@ -34,29 +34,27 @@ class SatRadio(object):
                 self.user_callback(data)
         except Exception, e:
             print "Exception in data _callback: %s" % e
- 
-    def _construct_telemetry(self, 
-        callsign, index, hhmmss, 
+
+    def _construct_telemetry(self,
+        callsign, index, hhmmss,
         lat_dec_deg, lon_dec_deg,
         lat_dil, alt,
-        temp1, temp2,
-        pressure):
+        dest_lat_deg, dest_lon_deg,
+        state):
 
         telem_str = "T|%s|%05d" % (callsign, index)
         # Time
         telem_str += hhmmss.strftime("|%H%M%S") if hhmmss else "|      "
         # GPS stuff
-        telem_str += "|%c" % ("N" if lat_dec_deg > 0 else "S") if type(lat_dec_deg) != str else "| "
-        telem_str += "|%08.05f" % abs(lat_dec_deg) if type(lat_dec_deg) != str else "|        "
-        telem_str += "|%c" % ("E" if lon_dec_deg > 0 else "W") if type(lon_dec_deg) != str else "| "
-        telem_str += "|%09.05f" % abs(lon_dec_deg) if type(lon_dec_deg) != str else "|         "
+        telem_str += "|%+08.05f" % lat_dec_deg if type(lat_dec_deg) != str else "|        "
+        telem_str += "|%+09.05f" % lon_dec_deg if type(lon_dec_deg) != str else "|         "
         telem_str += "|%05.02f" % lat_dil if type(lat_dil) != str else "|     "
         telem_str += "|%08.02f" % alt if type(alt) != str else "|        "
-        # Temperatures
-        telem_str += "|%+08.03f" % temp1 if temp1 else "|        "
-        telem_str += "|%+08.03f" % temp2 if temp2 else "|        "
-        # Pressure
-        telem_str += "|%09.02f" % pressure if pressure else "|       "
+
+        telem_str += "|%+09.05f" % dest_lat_deg if type(dest_lat_deg) != str else "|         "
+        telem_str += "|%+08.05f" % dest_lon_deg if type(dest_lon_deg) != str else "|        "
+        telem_str += "|%s" % state
+
         return telem_str
  
     def _encode_data(self, data):
@@ -83,15 +81,15 @@ class SatRadio(object):
     def send_telem(self, hhmmss, 
         lat_dec_deg, lon_dec_deg,
         lat_dil, alt,
-        temp1, temp2,
-        pressure):
+        dest_lat_deg, dest_lon_deg,
+        state):
         data = self._construct_telemetry(
             self.callsign.ljust(8)[:8], 
             self.telem_index, hhmmss, 
             lat_dec_deg, lon_dec_deg,
             lat_dil, alt,
-            temp1, temp2,
-            pressure
+            dest_lat_deg, dest_lon_deg,
+            state
         )
         self.telem_index += 1
         return self.send_packet(data)

@@ -8,6 +8,7 @@ import time
 import math
 import logging
 import traceback
+deg = math.degrees
 
 import datetime
 import dateutil.parser
@@ -27,13 +28,14 @@ class TelemetryHandler():
     to the glider modules (like IMU, GPS). Have to give that on init()
     unfortunately.
     """
-    def __init__(self, radio, imu, pilot, gps):
+    def __init__(self, radio, imu, pilot, gps, glider):
         self.threadAlive = True
 
         self.radio = radio
         self.imu = imu
         self.pilot = pilot
         self.gps = gps
+        self.glider = glider
         self.glider_state = None
         self.alien_gps_dump = {}
 
@@ -41,29 +43,18 @@ class TelemetryHandler():
         self.telemetry_lastsent = time.time()
         self.aliendatadump_lastsent = time.time()
 
-        self.glider_data_interval = glider_config.getint("telemetry", "interval_data")
-        self.telemetry_interval = glider_config.getint("telemetry", "interval_telem")
-        self.aliendatadump_interval = glider_config.getint("telemetry", "interval_aliendump")
-
-    def genTelemStr_orientation(self):
-        telStr = "O:%2.1f_%2.1f_%2.1f" % (
-            math.degrees(self.imu.roll),
-            math.degrees(self.imu.pitch),
-            math.degrees(self.imu.yaw))
-        return telStr
-
-    def genTelemStr_wing(self):
-        telStr = "W:%2.1f_%2.1f" % ( self.pilot.wing_angles[0], self.pilot.wing_angles[1])
-        return telStr
+        self.glider_data_interval = glider_config.getfloat("telemetry", "interval_data")
+        self.telemetry_interval = glider_config.getfloat("telemetry", "interval_telem")
 
     def send_glider_data(self):
         LOG.debug("Sending glider data")
         data = [
-            self.genTelemStr_orientation(), 
-            self.genTelemStr_wing(), 
-            "S:%s" % self.glider_state
+            "O:%2.1f_%2.1f_%2.1f" % (deg(self.imu.roll), deg(self.imu.pitch), deg(self.imu.yaw)),
+            "W:%2.1f_%2.1f" % (self.pilot.wing_angles[0] - self.pilot.wing_flat_angle_l, self.pilot.wing_angles[1] - self.pilot.wing_flat_angle_r),
+            "H:%s_%s" % (deg(self.pilot.desired_yaw), self.pilot.desired_pitch_deg),
         ]
         self.radio.send_data(data)
+        self.radio.serial_port.flush()
 
     def send_telemetry(self):
         LOG.debug("Sending glider telemetry")
@@ -72,24 +63,14 @@ class TelemetryHandler():
         try:
             hhmmss = dateutil.parser.parse(location_data.time)
         except:
-            LOG.warning("Can't generate gps telemetry")
-        temp1 = 0
-        temp2 = 0
-        pressure = 0
+            LOG.warning("Can't generate gps telemetry - no time fix")
         self.radio.send_telem(
             hhmmss,
             location_data.lat, location_data.lon,
             location_data.epx, location_data.alt,
-            temp1, temp2,
-            pressure
+            self.pilot.destination[0], self.pilot.destination[1],
+            self.glider.current_state
         )
-
-    def send_aliendatadump(self):
-        LOG.info("Echoing %s telemetry packets" % len(self.alien_gps_dump.keys()))
-        for callsign, telemtry_packet in self.alien_gps_dump.items():
-            LOG.info("Echoing %s telemetry packets" % callsign)
-            self.radio.send_packet(telemtry_packet, mode=self.radio.MODE_P2MP)
-            time.sleep(0.5)
 
     def set_state(self, state):
         self.glider_state = state
@@ -107,9 +88,6 @@ class TelemetryHandler():
                 if now - self.telemetry_lastsent > self.telemetry_interval:
                     self.send_telemetry()
                     self.telemetry_lastsent = now
-                if now - self.aliendatadump_lastsent > self.aliendatadump_interval:
-                    self.send_aliendatadump()
-                    self.aliendatadump_lastsent = now
             except:
                 LOG.error(traceback.format_exc())
             time.sleep(0.1)

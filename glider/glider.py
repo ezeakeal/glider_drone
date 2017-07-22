@@ -60,7 +60,7 @@ class Glider(object):
         "RECOVER": gstates.recovery(),
         "ERROR": gstates.errorState()
     }
-    current_state = "HEALTH_CHECK"
+    current_state = "FLIGHT"
 
     def __init__(self):
         # Initialize all modules
@@ -72,9 +72,9 @@ class Glider(object):
         self.pwm_controller = GliderPWMController()
         # The pilot and telemetry handler need access to the instances we created
         self.pilot = Pilot(self.imu)
-        self.telemetry_handler = TelemetryHandler(self.radio, self.imu, self.pilot, self.gps)
+        self.telemetry_handler = TelemetryHandler(self.radio, self.imu, self.pilot, self.gps, self)
         self.start_modules()
-        self.speak("Glider initialized")
+        self.speak("Glider ready")
 
     def start_modules(self):
         # Start up modules
