@@ -1,3 +1,4 @@
+import glob
 import os
 import logging
 import logging.config
@@ -50,7 +51,64 @@ import glider_states as gstates
 ##########################################
 # MAIN
 ##########################################
-class Glider(object):
+class GliderCommandMixin(object):
+    COMMAND_DIRECTIVES = None
+
+    def __init__(self):
+        self.COMMAND_DIRECTIVES = {
+            "PA": self.pitch_change,
+            "O": self.state_change,
+            "TS": self.turn_severity_change,
+            "DEST": self.destination_change,
+            "IMAGE": self.image_command,
+        }
+
+    def command_handler(self, msg_dict, **kwargs):
+        LOG.info("Handling command: %s %s" % (msg_dict, kwargs))
+        command_data = msg_dict['message']
+        command_parts = command_data.split("|")
+        command_instruction = command_parts[0]
+        command_function = self.COMMAND_DIRECTIVES.get(command_instruction)
+        if not command_function:
+            LOG.error("No command found for instruction: %s" % command_instruction)
+        try:
+            return command_function(command_parts)
+        except:
+            LOG.exception("Error in running command")
+            return None
+
+    def pitch_change(self, arg_array):
+        new_pitch = float(arg_array[1])
+        if new_pitch < 0 and new_pitch > -90:
+            self.pilot.desired_pitch_deg = new_pitch
+        else:
+            LOG.error("Bad pitch (Not between 0 and -90): %s" % new_pitch)
+
+    def state_change(self, arg_array):
+        new_state = arg_array[1]
+        if new_state in self.state_machine.keys():
+            self.current_state = new_state
+        else:
+            LOG.error("Bad state requested: %s" % new_state)
+
+    def turn_severity_change(self, arg_array):
+        new_severity = float(arg_array[1])
+        if new_severity > 0 and new_severity < 3:
+            self.pilot.turn_severity = new_severity
+        else:
+            LOG.error("Bad severity (Not between 0 and 3): %s" % new_severity)
+
+    def destination_change(self, arg_array):
+        lat = arg_array[1]
+        lon = arg_array[2]
+        self.pilot.update_destination(arg_array[1], arg_array[2])
+
+    def image_command(self, arg_array):
+        newest_image = max(glob.iglob('%s/low_*.jpg' % self.camera.photo_path), key=os.path.getctime)
+        self.radio.sendImage(newest_image)
+
+
+class Glider(GliderCommandMixin):
     state_machine = {
         "HEALTH_CHECK": gstates.healthCheck(),
         "ASCENT": gstates.ascent(),
@@ -103,9 +161,6 @@ class Glider(object):
         with open(os.devnull, "w") as devnull:
             subprocess.call(["espeak", "-ven-us", "-m", "-p", "70", "-s", "180", text], stdout=devnull, stderr=devnull)
 
-    def command_handler(self, *args, **kwargs):
-        LOG.info("Handling command: %s %s" % (args, kwargs))
-
     def run_state_machine(self):
         self.running = True
         while self.running:
@@ -126,22 +181,12 @@ class Glider(object):
                     self.speak("Switching state to %s" % newState)
                     self.current_state = newState
 
-                # Check if we need to override the state for any reason (this signal comes from groundstation)
-                # overrideState = self.getOverrideState()
-                # if overrideState:
-                #     LOG.debug("Override state: %s" % overrideState)
-                #     self.setOverrideState(None)
-                #     if overrideState and overrideState in self.state_machine.keys():
-                #         newState = overrideState
-                #         LOG.debug("Set override state: %s" % overrideState)
-
             except KeyboardInterrupt:
                 self.stop()
                 raise # Don't go to error state, close the program!
             except:
                 LOG.error(traceback.print_exc())
                 self.current_state = "ERROR"
-
 
 if __name__ == '__main__':
     try:
