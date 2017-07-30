@@ -122,6 +122,11 @@ class Pilot(object):
         self.destination = [float(lat), float(lon)]
         self.update_desired_heading()
 
+    def update_location(self, lat, lon):
+        """Method to enforce that the heading is updated when current location is updated"""
+        self.location = [lat, lon]
+        self.update_desired_heading()
+
     def update_desired_heading(self):
         # http://stackoverflow.com/questions/4913349/haversine-formula-in-python-bearing-and-distance-between-two-gps-points
         x1, y1 = float(self.location[0]), float(self.location[1])

@@ -28,33 +28,13 @@ from modules.glider_telem import TelemetryHandler
 
 import glider_states as gstates
 
-#
-#     #####################################################################
-#     # FUNCTIONS - Audio/Video
-#     #####################################################################
-#
-#
-#
-#     def sendImage():
-#         newest_image = max(glob.iglob('%s/low_*.jpg' % CAMERA.photo_path), key=os.path.getctime)
-#         RADIO.sendImage(newest_image)
-#
-#
-#
-#     ########################
-#     # Alien Telemetry
-#     ########################
-#     def storeAlienTelemetry(telemetry_string, callsign):
-#         LOG.debug("Storing Alien Telemetry for %s: (%s)" % (callsign, telemetry_string))
-#         TELEM.alien_gps_dump[callsign] = telemetry_string
-
 ##########################################
 # MAIN
 ##########################################
 class GliderCommandMixin(object):
     COMMAND_DIRECTIVES = None
 
-    def __init__(self):
+    def setup_command_directives(self):
         self.COMMAND_DIRECTIVES = {
             "PA": self.pitch_change,
             "O": self.state_change,
@@ -65,7 +45,7 @@ class GliderCommandMixin(object):
 
     def command_handler(self, msg_dict, **kwargs):
         LOG.info("Handling command: %s %s" % (msg_dict, kwargs))
-        command_data = msg_dict['message']
+        command_data = str(msg_dict['message'])
         command_parts = command_data.split("|")
         command_instruction = command_parts[0]
         command_function = self.COMMAND_DIRECTIVES.get(command_instruction)
@@ -132,21 +112,24 @@ class Glider(GliderCommandMixin):
         self.pilot = Pilot(self.imu)
         self.telemetry_handler = TelemetryHandler(self.radio, self.imu, self.pilot, self.gps, self)
         self.start_modules()
+        self.setup_command_directives()
         self.speak("Glider ready")
 
     def start_modules(self):
         # Start up modules
         self.speak("Starting modules")
         self.gps.start()
+        self.radio.start()
         self.pilot.start()
         self.camera.start()
         self.telemetry_handler.start()
         self.pwm_controller.start()
-        self.radio.start()
+
 
     def stop_modules(self):
         self.speak("Stopping modules")
         self.gps.stop()
+        self.radio.stop()
         self.pilot.stop()
         self.camera.stop()
         self.telemetry_handler.stop()

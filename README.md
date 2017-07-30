@@ -133,6 +133,8 @@ When I was trying to test the servos, some weird things happened before I found 
     Loud beeper for finding
     Groundstation application which shows where the satellites are with overlay on camera!
 
+<iframe src="https://giphy.com/embed/S3Ot3hZ5bcy8o" width="480" height="375" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/jack-nicholson-nodding-anger-management-S3Ot3hZ5bcy8o">via GIPHY</a></p>
+
 ## Todo list:
     Fix the GPS tracking in the IMU module
         GPS tracking set the offset for the IMU, but tracking was degrees, IMU was radians

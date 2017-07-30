@@ -23,7 +23,8 @@ class GliderRadio(SatRadio):
         port = glider_config.get("radio", "port")
         callsign = glider_config.get("radio", "callsign")
         baud_rate = glider_config.get("radio", "baud_rate")
-        SatRadio.__init__(self, port, 0xFF, callsign, baud_rate=baud_rate, callback=callback)
+        address = int(glider_config.get("radio", "address"), 16)
+        SatRadio.__init__(self, port, address, callsign, baud_rate=baud_rate, callback=callback)
 
     def send_data(self, data):
         LOG.debug("Sending Data: %s to %s" % (data, self.groundstation_address))

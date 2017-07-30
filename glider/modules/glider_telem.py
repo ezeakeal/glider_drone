@@ -54,7 +54,6 @@ class TelemetryHandler():
             "H:%s_%s" % (deg(self.pilot.desired_yaw), self.pilot.desired_pitch_deg),
         ]
         self.radio.send_data(data)
-        self.radio.serial_port.flush()
 
     def send_telemetry(self):
         LOG.debug("Sending glider telemetry")

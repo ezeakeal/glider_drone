@@ -5,6 +5,8 @@ import crcmod.predefined
 
 from threading import Thread
 
+import serial
+
 LOG = logging.getLogger('glider.rhserial')
 
 
@@ -16,9 +18,8 @@ BROADCAST = 0xFF
 
 class RHSerial(object):
 
-    def __init__(self, port, address=0xFF, callback=None, promiscuous=False):
-        self.port = port
-        self.port.timeout = 2
+    def __init__(self, port, baud_rate=38400, address=0xFF, callback=None, promiscuous=False):
+        self.serial = serial.Serial(port, baud_rate, bytesize=8, stopbits=1, parity=serial.PARITY_NONE, timeout=2)
         self.address = address
         self.callback = callback
         self.promiscuous = promiscuous
@@ -26,6 +27,8 @@ class RHSerial(object):
         self.listen_thread = None
 
     def start(self):
+        if self.listen:
+            raise Exception("RHserial is being started again. Don't do this! It screws the serial connection.")
         self.listen = True
         self.listen_thread = Thread(target=self._listen_for_msg, args=[])
         self.listen_thread.start()
@@ -33,7 +36,7 @@ class RHSerial(object):
     def stop(self):
         self.listen = False
         self.listen_thread.join()
-
+        self.serial.close()
 
     def _listen_for_msg(self):
         message = bytearray()
@@ -42,7 +45,7 @@ class RHSerial(object):
 
         while self.listen:
             try:
-                byte = self.port.read()
+                byte = self.serial.read()
                 if byte:
                     LOG.warning("State(%10s) byte(%s) ord(%s)" % (state, byte, ord(byte)))
                     if state == 'IDLE':
@@ -100,7 +103,7 @@ class RHSerial(object):
 
 
     def send(self, msg, to=0xFF, id=0):
-        if not self.port.isOpen():
+        if not self.serial.isOpen():
             raise Exception("Serial port is not open. Start thread to open port.")
         msghead = bytearray.fromhex("10 02")
         msgto = chr(to)
@@ -113,7 +116,7 @@ class RHSerial(object):
         checkable = msgto + msgfrom + msgid + msgflag + message + msgtail
         checksum = bytearray(struct.pack(">H", crc16(str(checkable))))
         full = msghead + checkable + checksum
-        self.port.write(full)
+        self.serial.write(full)
 
     def _processmsg(self, msg):
         msgto = msg[0]

@@ -1,26 +1,18 @@
-import serial
 import logging
 from rhserial import RHSerial
 
 LOG = logging.getLogger("glider.%s" % __name__)
+LOG.setLevel(logging.DEBUG)
 
-
-class SatRadio(object):
+class SatRadio(RHSerial):
     BROADCAST = 0xFF
 
     def __init__(self, port, address, callsign, baud_rate=38400, callback=None):
-        self.port = port
-        self.baud_rate = baud_rate
-        self.serial_port = None
-        self.radio = None
         self.frame_count = 1
         self.telem_index = 1
-        self.address = address
         self.callsign = callsign
         self.user_callback = callback
-        self.start()
-
-    # No TX callbacks available
+        self.radio = RHSerial(port, address=address, baud_rate=baud_rate, callback=self._callback)
 
     def _rx_callback(self, packet):
         # Could do something here, I dunno.
@@ -33,7 +25,7 @@ class SatRadio(object):
             if self.user_callback:
                 self.user_callback(data)
         except Exception, e:
-            print "Exception in data _callback: %s" % e
+            LOG.exception("Exception in data callback")
 
     def _construct_telemetry(self,
         callsign, index, hhmmss,
@@ -61,13 +53,10 @@ class SatRadio(object):
         return b'%s' % data
  
     def start(self):
-        self.serial_port = serial.Serial(self.port, self.baud_rate)
-        self.radio = RHSerial(self.serial_port, address=self.address, callback=self._callback)
         self.radio.start()
  
     def stop(self):
         self.radio.stop()
-        self.serial_port.close()
  
     def send_packet(self, data, address=0xFF):
         LOG.debug("Sending: %s" % data)

@@ -1,7 +1,5 @@
 from unittest import TestCase
 
-import time
-
 from glider.modules.glider_radio import GliderRadio
 
 class TestGliderRadio(TestCase):
