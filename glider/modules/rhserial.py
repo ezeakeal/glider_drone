@@ -47,7 +47,6 @@ class RHSerial(object):
             try:
                 byte = self.serial.read()
                 if byte:
-                    LOG.warning("State(%10s) byte(%s) ord(%s)" % (state, byte, ord(byte)))
                     if state == 'IDLE':
                         # looking for a DLE to start.
                         if ord(byte) == DLE:

@@ -2,16 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e8edcd78-bce6-4821-bfc9-dd0cee85d218" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/glider.py" afterPath="$PROJECT_DIR$/glider/glider.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/glider_conf.ini" afterPath="$PROJECT_DIR$/glider/glider_conf.ini" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/modules/glider_pilot.py" afterPath="$PROJECT_DIR$/glider/modules/glider_pilot.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/modules/glider_radio.py" afterPath="$PROJECT_DIR$/glider/modules/glider_radio.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/modules/glider_telem.py" afterPath="$PROJECT_DIR$/glider/modules/glider_telem.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/modules/rhserial.py" afterPath="$PROJECT_DIR$/glider/modules/rhserial.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/modules/sat_radio.py" afterPath="$PROJECT_DIR$/glider/modules/sat_radio.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/glider/test/test_gliderRadio.py" afterPath="$PROJECT_DIR$/glider/test/test_gliderRadio.py" />
     </list>
     <ignored path="glider_drone.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -67,7 +59,7 @@
     <SUITE FILE_PATH="coverage/glider_drone$glider_gps.coverage" NAME="glider_gps Coverage Results" MODIFIED="1499698614713" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetests_in_TestGliderPWMController.coverage" NAME="Nosetests in TestGliderPWMController Coverage Results" MODIFIED="1499880194526" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetests_in_test_gliderCamera.coverage" NAME="Nosetests in test_gliderCamera Coverage Results" MODIFIED="1499788034911" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
-    <SUITE FILE_PATH="coverage/glider_drone$glider.coverage" NAME="glider Coverage Results" MODIFIED="1501446434809" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider" />
+    <SUITE FILE_PATH="coverage/glider_drone$glider.coverage" NAME="glider Coverage Results" MODIFIED="1501455720214" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetest_TestGliderCamera_test_take_video__1_.coverage" NAME="Nosetest TestGliderCamera.test_take_video (1) Coverage Results" MODIFIED="1499785058956" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetests_in_TestGliderPWMController__3_.coverage" NAME="Nosetests in TestGliderPWMController (3) Coverage Results" MODIFIED="1499880629534" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
     <SUITE FILE_PATH="coverage/glider_drone$Nosetests_in_TestGliderCamera.coverage" NAME="Nosetests in TestGliderCamera Coverage Results" MODIFIED="1499792435333" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/glider/test" />
@@ -83,11 +75,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="glider.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="glider.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/glider/glider.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1793">
-              <caret line="53" column="12" selection-start-line="53" selection-start-column="12" selection-end-line="53" selection-end-column="12" />
+            <state relative-caret-position="366">
+              <caret line="87" column="0" selection-start-line="87" selection-start-column="0" selection-end-line="87" selection-end-column="0" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -95,13 +87,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="glider_radio.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="glider_radio.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/glider/modules/glider_radio.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="145">
-              <caret line="25" column="64" selection-start-line="25" selection-start-column="64" selection-end-line="25" selection-end-column="64" />
+            <state relative-caret-position="179">
+              <caret line="70" column="33" selection-start-line="70" selection-start-column="33" selection-end-line="70" selection-end-column="33" />
               <folding>
-                <element signature="e#149#158#0" expanded="true" />
+                <element signature="e#148#161#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -122,8 +114,8 @@
       <file leaf-file-name="rhserial.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/glider/modules/rhserial.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="21" column="114" selection-start-line="21" selection-start-column="114" selection-end-line="21" selection-end-column="114" />
+            <state relative-caret-position="323">
+              <caret line="46" column="16" selection-start-line="45" selection-start-column="8" selection-end-line="46" selection-end-column="16" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -144,8 +136,8 @@
       <file leaf-file-name="glider_conf.ini" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/glider/glider_conf.ini">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="298">
-              <caret line="68" column="19" selection-start-line="68" selection-start-column="19" selection-end-line="68" selection-end-column="19" />
+            <state relative-caret-position="332">
+              <caret line="70" column="17" selection-start-line="70" selection-start-column="17" selection-end-line="70" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -238,14 +230,14 @@
         <option value="$PROJECT_DIR$/glider/imu_reader.py" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/glider/test/test_gliderRadio.py" />
-        <option value="$PROJECT_DIR$/glider/modules/glider_radio.py" />
         <option value="$PROJECT_DIR$/glider/modules/glider_pilot.py" />
         <option value="$PROJECT_DIR$/glider/glider_states.py" />
         <option value="$PROJECT_DIR$/glider/glider_conf.ini" />
         <option value="$PROJECT_DIR$/glider/modules/glider_telem.py" />
         <option value="$PROJECT_DIR$/glider/glider.py" />
-        <option value="$PROJECT_DIR$/glider/modules/rhserial.py" />
         <option value="$PROJECT_DIR$/glider/modules/sat_radio.py" />
+        <option value="$PROJECT_DIR$/glider/modules/rhserial.py" />
+        <option value="$PROJECT_DIR$/glider/modules/glider_radio.py" />
       </list>
     </option>
   </component>
@@ -765,7 +757,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
+    <frame x="0" y="27" width="1920" height="1053" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329718" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -844,7 +836,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="92" />
+      <option name="time" value="93" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1072,7 +1064,7 @@
         <state relative-caret-position="1249">
           <caret line="139" column="65" selection-start-line="139" selection-start-column="65" selection-end-line="139" selection-end-column="65" />
           <folding>
-            <element signature="e#204#213#0" expanded="false" />
+            <element signature="e#218#227#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1242,23 +1234,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/glider/modules/glider_radio.py">
+    <entry file="file://$PROJECT_DIR$/glider/glider.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="145">
-          <caret line="25" column="64" selection-start-line="25" selection-start-column="64" selection-end-line="25" selection-end-column="64" />
+        <state relative-caret-position="366">
+          <caret line="87" column="0" selection-start-line="87" selection-start-column="0" selection-end-line="87" selection-end-column="0" />
           <folding>
-            <element signature="e#149#158#0" expanded="true" />
+            <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/glider/modules/rhserial.py">
+    <entry file="file://$PROJECT_DIR$/glider/glider_conf.ini">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="21" column="114" selection-start-line="21" selection-start-column="114" selection-end-line="21" selection-end-column="114" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="332">
+          <caret line="70" column="17" selection-start-line="70" selection-start-column="17" selection-end-line="70" selection-end-column="17" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1272,20 +1262,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/glider/glider_conf.ini">
+    <entry file="file://$PROJECT_DIR$/glider/modules/rhserial.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="68" column="19" selection-start-line="68" selection-start-column="19" selection-end-line="68" selection-end-column="19" />
-          <folding />
+        <state relative-caret-position="323">
+          <caret line="46" column="16" selection-start-line="45" selection-start-column="8" selection-end-line="46" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/glider/glider.py">
+    <entry file="file://$PROJECT_DIR$/glider/modules/glider_radio.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1793">
-          <caret line="53" column="12" selection-start-line="53" selection-start-column="12" selection-end-line="53" selection-end-column="12" />
+        <state relative-caret-position="179">
+          <caret line="70" column="33" selection-start-line="70" selection-start-column="33" selection-end-line="70" selection-end-column="33" />
           <folding>
-            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#148#161#0" expanded="true" />
           </folding>
         </state>
       </provider>
