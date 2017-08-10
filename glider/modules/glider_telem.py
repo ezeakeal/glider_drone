@@ -52,6 +52,8 @@ class TelemetryHandler():
             "O:%2.1f_%2.1f_%2.1f" % (deg(self.imu.roll), deg(self.imu.pitch), deg(self.imu.yaw)),
             "W:%2.1f_%2.1f" % (self.pilot.wing_angles[0] - self.pilot.wing_flat_angle_l, self.pilot.wing_angles[1] - self.pilot.wing_flat_angle_r),
             "H:%s_%s" % (deg(self.pilot.desired_yaw), self.pilot.desired_pitch_deg),
+            "G:%s_%s" % (self.gps.data.speed, self.gps.data.track),
+            "C:%s_%s" % (self.glider.commands_received, self.glider.last_command_dir),
         ]
         self.radio.send_data(data)
 

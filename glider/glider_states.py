@@ -116,7 +116,7 @@ class ascent(gliderState):
         LOG.info("Checking alt (%s) > target (%s)" % (
             self.location.alt, self.desiredAltitude
         ))
-        if self.location.alt > self.desiredAltitude:
+        if type(self.location.alt) == float and self.location.alt > self.desiredAltitude:
             self.readyToSwitch = True
         return super(ascent, self).switch()
         
@@ -160,15 +160,22 @@ class glide(gliderState):
             self.recalculation_timestamp = now
             # Get our new location
             self.location = glider_instance.gps.data
+            # Ensure that the latitude is a value before continuing
             if self.location.lat == "n/a":
-                LOG.warning("Bad location, course unchanged")
+                LOG.error("Bad location, course unchanged")
                 return
+            # Check that we have a heading before trying to correct the IMU
+            if self.location.track == "0.0" or self.location.speed < 3:
+                LOG.error("Bad heading or speed too low, orientation uncorrected (track:%s)" % self.location.track)
+            else:
+                correction = glider_instance.imu.correct_heading(self.location.track)
+            # Update the desired heading
             glider_instance.pilot.update_location(self.location.lat, self.location.lon)
         # Update the servos
         left_angle, right_angle = glider_instance.pilot.update_wing_angles()
         glider_instance.pwm_controller.set_wings(left_angle, right_angle)
         # Check if we're ready to switch
-        if (self.location and self.location.alt and self.location.alt < self.parachute_height):
+        if (self.location and self.location.alt and type(self.location.alt) == float and self.location.alt < self.parachute_height):
             self.readyToSwitch = True
 
 #-----------------------------------
@@ -233,3 +240,44 @@ class errorState(gliderState):
         # LOOK FOR A RESPONSE!
         # We need to set the state it should go in to..
         self.readyToSwitch = True
+
+#-----------------------------------
+#         TESTING STATES
+#-----------------------------------
+class test_chute(gliderState):
+
+    def __init__(self):
+        super(test_chute, self).__init__()
+        self.nextState = "RECOVER"
+        self.sleepTime = glider_config.getfloat("flight", "wing_update_interval")
+        self.chute_deploy_delay = glider_config.getfloat("test_chute", "chute_delay_time")
+        self.deploy_init_timestamp = None
+        self.spoken_integer = -1
+
+    def execute(self, glider_instance):
+        now = time.time()
+        if not self.deploy_init_timestamp:
+            glider_instance.speak("Parachute test")
+            try:
+                glider_instance.camera.take_video(60)
+            except:
+                LOG.exception("Camera not working")
+            self.deploy_init_timestamp = now
+
+        # We don't want to turn, just want to keep flat.
+        glider_instance.pilot.desired_yaw = glider_instance.pilot.IMU.yaw
+
+        # Update the servos
+        left_angle, right_angle = glider_instance.pilot.update_wing_angles()
+        glider_instance.pwm_controller.set_wings(left_angle, right_angle)
+
+        # Convert the times to a countdown
+        delay_sec = int(self.chute_deploy_delay - (now - self.deploy_init_timestamp))
+        if delay_sec != self.spoken_integer:
+            glider_instance.speak(str(delay_sec))
+        self.spoken_integer = delay_sec
+
+        # Check if we're ready to switch
+        if (now - self.deploy_init_timestamp > self.chute_deploy_delay):
+            glider_instance.pwm_controller.release_parachute()
+            self.readyToSwitch = True

@@ -38,7 +38,7 @@ class GliderPWMController(object):
     # If they match, no servo signal is sent to the servo hat
     angle_wing_l = [90, -1]
     angle_wing_r = [90, -1]
-    angle_parachute = [0, -1]
+    angle_parachute = [180, -1]
     angle_balloon_release = [0, -1]
 
     def __init__(self):
@@ -106,7 +106,7 @@ class GliderPWMController(object):
 
     def release_parachute(self):
         LOG.debug("Releasing parachute")
-        self.angle_parachute[0] = 180
+        self.angle_parachute[0] = 0
 
     def release_from_balloon(self):
         LOG.debug("Releasing from balloon")

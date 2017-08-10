@@ -13,7 +13,7 @@ Setup remote debug (https://nathanpjones.com/2016/02/remote-debug-gpio-on-raspbe
 3. Glider (Go Discover FPV EPO) https://hobbyking.com/en_us/hobbykingr-tm-go-discover-fpv-plane-epo-1600mm-kit.html
 4. Foil tape - reflectors
 5. Copper tape - make dipole antenna out of glider structural rod
-6. 2 LoRa radios
+6. 2 LoRa radios (http://www.hoperf.com/rf_transceiver/lora/RFM95W.html) with some interface.
 7. Raspberry Pi B 2
 8. Raspberry Pi servo hat + sensor hats
 9. LiIon battery packs (10000 mAh recommended.. I have 2)

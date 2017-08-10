@@ -2,7 +2,6 @@ import logging
 from rhserial import RHSerial
 
 LOG = logging.getLogger("glider.%s" % __name__)
-LOG.setLevel(logging.DEBUG)
 
 class SatRadio(RHSerial):
     BROADCAST = 0xFF

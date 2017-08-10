@@ -106,7 +106,7 @@ class GliderCamera(object):
                     out_path = self.take_high_pic()
                     self.last_high_pic = now
                     LOG.debug("Created high pic: %s" % out_path)
-            except picamera.exc.PiCameraMMALError:
+            except:
                 LOG.error("Camera can't initialize, try again later")
             time.sleep(1)
 

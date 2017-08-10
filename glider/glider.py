@@ -33,6 +33,8 @@ import glider_states as gstates
 ##########################################
 class GliderCommandMixin(object):
     COMMAND_DIRECTIVES = None
+    commands_received = 0
+    last_command_dir = ""
 
     def setup_command_directives(self):
         self.COMMAND_DIRECTIVES = {
@@ -52,6 +54,8 @@ class GliderCommandMixin(object):
         if not command_function:
             LOG.error("No command found for instruction: %s" % command_instruction)
         try:
+            self.commands_received += 1
+            self.last_command_dir = command_instruction
             return command_function(command_parts)
         except:
             LOG.exception("Error in running command")
@@ -60,6 +64,7 @@ class GliderCommandMixin(object):
     def pitch_change(self, arg_array):
         new_pitch = float(arg_array[1])
         if new_pitch < 0 and new_pitch > -90:
+            self.speak("Updating pitch")
             self.pilot.desired_pitch_deg = new_pitch
         else:
             LOG.error("Bad pitch (Not between 0 and -90): %s" % new_pitch)
@@ -67,6 +72,7 @@ class GliderCommandMixin(object):
     def state_change(self, arg_array):
         new_state = arg_array[1]
         if new_state in self.state_machine.keys():
+            self.speak("Updating state: %s" % new_state)
             self.current_state = new_state
         else:
             LOG.error("Bad state requested: %s" % new_state)
@@ -74,6 +80,7 @@ class GliderCommandMixin(object):
     def turn_severity_change(self, arg_array):
         new_severity = float(arg_array[1])
         if new_severity > 0 and new_severity < 3:
+            self.speak("Updating severity")
             self.pilot.turn_severity = new_severity
         else:
             LOG.error("Bad severity (Not between 0 and 3): %s" % new_severity)
@@ -81,9 +88,11 @@ class GliderCommandMixin(object):
     def destination_change(self, arg_array):
         lat = arg_array[1]
         lon = arg_array[2]
+        self.speak("Updating destination")
         self.pilot.update_destination(arg_array[1], arg_array[2])
 
     def image_command(self, arg_array):
+        self.speak("Sending image")
         newest_image = max(glob.iglob('%s/low_*.jpg' % self.camera.photo_path), key=os.path.getctime)
         self.radio.sendImage(newest_image)
 
@@ -96,7 +105,9 @@ class Glider(GliderCommandMixin):
         "FLIGHT": gstates.glide(),
         "PARACHUTE": gstates.parachute(),
         "RECOVER": gstates.recovery(),
-        "ERROR": gstates.errorState()
+        "ERROR": gstates.errorState(),
+
+        "TEST_CHUTE": gstates.test_chute()
     }
     current_state = "FLIGHT"
 

@@ -1,3 +1,4 @@
+import math
 import redis
 import logging
 from modules import glider_config
@@ -18,6 +19,8 @@ class IMU(object):
     """
     imu = None
 
+    offset_yaw= 0
+
     def __init__(self):
         self.redis_client = redis.StrictRedis(
             host=glider_config.get("redis_client", "host"),
@@ -31,13 +34,24 @@ class IMU(object):
             return default
         return float(val)
 
+    def correct_heading(self, gps_heading):
+        imu_heading = self.yaw
+        gps_heading_rad = math.radians(gps_heading)
+        old_correction = self.offset_yaw
+        self.offset_yaw = gps_heading_rad - (imu_heading - old_correction)
+        correction = math.degrees(old_correction - self.offset_yaw)
+        LOG.info("Corrected heading by %s degrees" % correction)
+        return correction
+
     @property
     def roll(self):
         return self._val_or_default("roll")
 
     @property
     def yaw(self):
-        return self._val_or_default("yaw")
+        imu_val = self._val_or_default("yaw")
+        imu_val += self.offset_yaw
+        return imu_val
 
     @property
     def pitch(self):
