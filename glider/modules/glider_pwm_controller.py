@@ -28,86 +28,94 @@ class GliderPWMController(object):
     servo_min_ms = glider_config.getfloat("servo", "min_ms")
     servo_max_ms = glider_config.getfloat("servo", "max_ms")
 
-    addr_wingl = glider_config.getint("servo", "address_wing_left")
-    addr_wingr = glider_config.getint("servo", "address_wing_right")
-    addr_chute = glider_config.getint("servo", "address_parachute")
-    addr_relse = glider_config.getint("servo", "address_release")
+    # We COULD lump this in with flap_addresses and angles, but I don't want code to ever accidentally trigger a release
+    servo_addresses = {"parachute": None, "release": None}
+    servo_angles = {"parachute": None, "release": None}
 
-    # Initialize all angles, and set the old values to a different value to trigger servo update
-    # [desired_value, current_value]
-    # If they match, no servo signal is sent to the servo hat
-    angle_wing_l = [90, -1]
-    angle_wing_r = [90, -1]
-    angle_parachute = [180, -1]
-    angle_balloon_release = [0, -1]
+    flap_addresses = {'rudder': None, 'rear': None,
+                       'left_near': None, 'right_near': None,
+                       'left_far': None, 'right_far': None}
+
+    flap_angles = {'rudder': None, 'rear': None,
+                    'left_near': None, 'right_near': None,
+                    'left_far': None, 'right_far': None}
+    _current_flap_angles = {} # Used to maintain the current angle and reduce calls to the PWM controller (unused)
 
     def __init__(self):
         LOG.debug("Staring up PWM Controller (Address=%s Frequency=%shz)" % (self.address, self.frequency))
         self.pwm = Adafruit_PCA9685.PCA9685(address=int(self.address, 16))
         self.pwm.set_pwm_freq(self.frequency)
+        self._read_flap_config()
         self.start()
+
+    def _read_flap_config(self):
+        for flap in self.flap_addresses.keys():
+            self.flap_addresses[flap] = glider_config.getfloat("servo", "flap_address_%s" % flap)
+            self.flap_angles[flap] = glider_config.getfloat("flight", "flap_center_%s" % flap)
+        for servo in self.servo_addresses.keys():
+            self.servo_addresses[flap] = glider_config.getfloat("servo", "servo_address_%s" % servo)
+            self.servo_angles[flap] = glider_config.getfloat("servo", "servo_center_%s" % servo)
 
     def start(self):
         servo_update_thread = Thread( target=self.update_servo_angles, args=() )
         self.threadAlive = True
+        LOG.info("Setting initial servo position")
+        self.servo_init_position()
         LOG.info("Starting up Servo Controller thread now")
         servo_update_thread.start()
 
+    def servo_init_position(self, delay=0.5):
+        for flap, address in self.flap_addresses.items():
+            center_angle = self.flap_angles(flap)
+            self._set_servo_angle(address, center_angle , self.servo_min_ms, self.servo_max_ms, force=True)
+            time.sleep(delay)
+
     def stop(self):
-        centre_l = glider_config.getfloat("flight", "wing_flat_angle_l")
-        centre_r = glider_config.getfloat("flight", "wing_flat_angle_r")
-        self.set_wings(centre_l, centre_r)
+        self.servo_init_position(delay=0.1)
         time.sleep(1)
         self.threadAlive = False
 
     def update_servo_angles(self):
         while self.threadAlive:
-            self._set_servo_angle(
-                self.addr_wingl, self.angle_wing_l,
-                self.servo_min_ms, self.servo_max_ms
-            )
-            self._set_servo_angle(
-                self.addr_wingr, self.angle_wing_r,
-                self.servo_max_ms, self.servo_min_ms  # Invert because servo is flipped on other side
-            )
-            self._set_servo_angle(
-                self.addr_relse, self.angle_balloon_release,
-                self.servo_min_ms, self.servo_max_ms
-            )
-            self._set_servo_angle(
-                self.addr_chute, self.angle_parachute,
-                self.servo_min_ms, self.servo_max_ms
-            )
-            time.sleep(0.01)
+            for flap_id, angle in self.flap_angles.items():
+                servo_address = self.flap_addresses[flap_id]
+                self._set_servo_angle(servo_address, angle)
+            for servo_id, angle in self.servo_angles.items():
+                servo_address = self.servo_addresses[servo_id]
+                self._set_servo_angle(servo_address, angle)
+            time.sleep(self.controller_breather) # Sleep at least this much - can happen if there are no angle updates
 
-    def _set_servo_angle(self, servo_address, angle_pair, min_ms, max_ms):
-        if angle_pair[0] == angle_pair[1]: # The new angle and old angle are the same
-            return
-        else: # The new angle is different!
-            angle_pair[1] = angle_pair[0]
-        angle = math.ceil(angle_pair[0])  # round the angle to reduce calls for minor adjustments
+    def _set_servo_angle(self, servo_address, angle, min_ms=None, max_ms=None, force=False):
+        if not force:
+            pass
+        if not min_ms:
+            min_ms = self.servo_min_ms
+        if not max_ms:
+            max_ms = self.servo_max_ms
+
+        angle = math.ceil(angle)  # round the angle to reduce calls for minor adjustments
         ms_range = float(max_ms - min_ms)
         LOG.debug("Servo pulse ms range: %s" % ms_range)
         # This is the pulse we add to the initial pulse of 1ms to change the angle
         # e.g. 1ms = 0deg, 2ms = 180deg, so angle_pulse of 0.5 results in 1.5 = 90deg
-        angle_pulse = (angle/ 180.0 * ms_range)
+        angle_pulse = (angle/180.0 * ms_range)
         LOG.debug("Angle fraction (%s = %s)" % (angle, angle_pulse))
         pulse_width = int(4096/(1000/self.frequency)*(min_ms + angle_pulse))
         LOG.info("Setting servo(%s) pulse (fraction=%s duration=%sms)" % (
-            servo_address, min_ms+angle_pulse, pulse_width)
-                 )
+            servo_address, min_ms+angle_pulse, pulse_width))
         self.pwm.set_pwm(servo_address, self.servo_pulse_lag, int(pulse_width + self.servo_pulse_lag))
         time.sleep(self.controller_breather)
 
-    def set_wings(self, angle_left_degrees, angle_right_degrees):
-        LOG.debug("Setting Wings: Left(%s) Right(%s)" % (angle_left_degrees, angle_right_degrees))
-        self.angle_wing_l[0] = angle_left_degrees
-        self.angle_wing_r[0] = angle_right_degrees
+    def set_flaps(self, angle_dictionary):
+        LOG.debug("Setting flaps: %s" % (angle_dictionary))
+        self.flap_angles.update(angle_dictionary)
 
-    def release_parachute(self):
+    def release_parachute(self, reset=False):
         LOG.debug("Releasing parachute")
-        self.angle_parachute[0] = 0
+        angle_parachute = 180 if reset else 0
+        self.servo_angles['parachute'] = angle_parachute
 
-    def release_from_balloon(self):
+    def release_from_balloon(self, reset=False):
         LOG.debug("Releasing from balloon")
-        self.angle_balloon_release[0] = 180
+        angle_balloon_release = 10 if reset else 180
+        self.servo_angles['release'] = angle_balloon_release

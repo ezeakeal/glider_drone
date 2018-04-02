@@ -38,7 +38,7 @@ class GliderCamera(object):
         camera.image_effect = 'none'
         camera.color_effects = None
         camera.rotation = 0
-        camera.hflip = True
+        camera.hflip = False
         camera.vflip = False
         camera.video_stabilization = True
         camera.exposure_compensation = 0

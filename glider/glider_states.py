@@ -39,6 +39,63 @@ class gliderState(object):
 ##########################################
 # CLASSES - STATE
 ##########################################
+# -----------------------------------
+#         Packaging
+# -----------------------------------
+class packaging(gliderState):
+    def __init__(self):
+        super(packaging, self).__init__()
+        self.nextState = "HEALTH_CHECK"
+        self.sleepTime = 5
+
+    def execute(self, glider_instance):
+        self.wing_test(glider_instance)
+        self.prepare_release(glider_instance)
+        self.prepare_parachute(glider_instance)
+        self.readyToSwitch = True
+
+    def prepare_release(self, glider_instance):
+        glider_instance.speak("Prepare Release Rod")
+        time.sleep(2)
+        glider_instance.speak("Open in 3 seconds")
+        time.sleep(4)
+        glider_instance.pwm_controller.release_from_balloon()
+        glider_instance.speak("Close in 3 seconds")
+        time.sleep(4)
+        glider_instance.pwm_controller.release_from_balloon(reset=True)
+
+    def prepare_parachute(self, glider_instance):
+        glider_instance.speak("Prepare Parachute")
+        time.sleep(2)
+        glider_instance.speak("Open in 3 seconds")
+        time.sleep(4)
+        glider_instance.pwm_controller.release_parachute()
+        glider_instance.speak("Close in 20 seconds")
+        time.sleep(21)
+        glider_instance.pwm_controller.release_parachute(reset=True)
+
+    def wing_test(self, glider_instance):
+        centre_l = glider_config.getfloat("flight", "wing_flat_angle_l")
+        centre_r = glider_config.getfloat("flight", "wing_flat_angle_r")
+        servo_max = glider_config.getfloat("flight", "servo_range")
+        glider_instance.speak("Wing test")
+        time.sleep(1)
+        glider_instance.speak("Centre")
+        glider_instance.pwm_controller.set_flaps(centre_l, centre_r)
+        time.sleep(1)
+        glider_instance.speak("Max")
+        glider_instance.pwm_controller.set_flaps(centre_l + servo_max, centre_r + servo_max)
+        time.sleep(1)
+        glider_instance.speak("Centre")
+        glider_instance.pwm_controller.set_flaps(centre_l, centre_r)
+        time.sleep(1)
+        glider_instance.speak("Min")
+        glider_instance.pwm_controller.set_flaps(centre_l - servo_max, centre_r - servo_max)
+        time.sleep(1)
+        glider_instance.speak("Centre")
+        glider_instance.pwm_controller.set_flaps(centre_l, centre_r)
+        time.sleep(1)
+
 #-----------------------------------
 #         Health Check
 #-----------------------------------
@@ -47,18 +104,15 @@ class healthCheck(gliderState):
         super(healthCheck, self).__init__()
         self.nextState = "ASCENT"
         self.sleepTime = 5
-        self.wings_tested = False
 
     def execute(self, glider_instance):
-        # Check servo range
-        if not self.wings_tested:
-            self.wing_test(glider_instance)
         # Get the location data, figure if locked
         location = glider_instance.gps.data
         max_error = max(location.epx, location.epy)
         locationLocked = max_error < 50
         # Get battery data. Figure if healthy
         if not locationLocked:
+            glider_instance.speak("Waiting for GPS")
             LOG.warning("Location is not locked yet (max error = %s)" % max_error)
         else:
             # Seems all is good
@@ -66,33 +120,16 @@ class healthCheck(gliderState):
             glider_instance.telemetry_handler.set_message("Health Good")
             self.readyToSwitch = True
 
-    def wing_test(self, glider_instance):
-        self.wings_tested = True
-        centre_l = glider_config.getfloat("flight", "wing_flat_angle_l")
-        centre_r = glider_config.getfloat("flight", "wing_flat_angle_r")
-        servo_max = glider_config.getfloat("flight", "servo_range")
-        glider_instance.speak("Wing test")
-        time.sleep(1)
-        glider_instance.speak("Centre")
-        glider_instance.pwm_controller.set_wings(centre_l, centre_r)
-        glider_instance.speak("Max")
-        glider_instance.pwm_controller.set_wings(centre_l+servo_max, centre_r+servo_max)
-        glider_instance.speak("Centre")
-        glider_instance.pwm_controller.set_wings(centre_l, centre_r)
-        glider_instance.speak("Min")
-        glider_instance.pwm_controller.set_wings(centre_l - servo_max, centre_r - servo_max)
-        glider_instance.speak("Centre")
-        glider_instance.pwm_controller.set_wings(centre_l, centre_r)
-
-
 #-----------------------------------
 #         Ascent
 #-----------------------------------
 class ascent(gliderState):
     def __init__(self):
-        super(ascent, self).__init__()
-        self.sleepTime = 5
+        super(ascent, self)\
+            .__init__()
+        self.sleepTime = 10
         self.desiredAltitude = glider_config.getfloat("mission", "balloon_release_altitude")
+        self.wingWiggleHeight = glider_config.getfloat("mission", "wing_antifreeze_wiggle_altitude")
         self.nextState = "RELEASE"
         self.wing_angle_acc = 0
         self.location = None
@@ -106,11 +143,12 @@ class ascent(gliderState):
         # wing_angle_acc is an incremented counter which is used to sweep the wing angles back and forth over 10 deg
         self.wing_angle_acc += .2
         wing_angles = [
-            self.wing_flat_angle_l + 10*math.cos(self.wing_angle_acc),
-            self.wing_flat_angle_r + 10*math.cos(self.wing_angle_acc)
+            self.wing_flat_angle_l + 5*math.cos(self.wing_angle_acc),
+            self.wing_flat_angle_r + 5*math.cos(self.wing_angle_acc)
         ]
-        LOG.info("Setting wing angles: %s" % wing_angles)
-        glider_instance.pwm_controller.set_wings(wing_angles[0], wing_angles[1])
+        if type(self.location.alt) == float and self.location.alt > self.wingWiggleHeight:
+            LOG.info("Setting wing angles: %s" % wing_angles)
+            glider_instance.pwm_controller.set_flaps(wing_angles[0], wing_angles[1])
 
     def switch(self):
         LOG.info("Checking alt (%s) > target (%s)" % (
@@ -151,12 +189,12 @@ class glide(gliderState):
         self.parachute_height = glider_config.getfloat("mission", "parachute_height")
         self.location = None
         self.sleepTime = glider_config.getfloat("flight", "wing_update_interval")
-        self.recalculation_timestamp = 0 # Counter to reduce CPU load (recalculate
-        self.recalculation_interval= glider_config.getfloat("flight", "location_refresh_interval")
+        self.recalculation_timestamp_location = 0 # Counter to reduce CPU load
+        self.recalculation_interval_location = glider_config.getfloat("flight", "location_refresh_interval")
 
     def execute(self, glider_instance):
         now = time.time()
-        if now - self.recalculation_timestamp > self.recalculation_interval:
+        if now - self.recalculation_timestamp > self.recalculation_interval_location :
             self.recalculation_timestamp = now
             # Get our new location
             self.location = glider_instance.gps.data
@@ -165,15 +203,17 @@ class glide(gliderState):
                 LOG.error("Bad location, course unchanged")
                 return
             # Check that we have a heading before trying to correct the IMU
-            if self.location.track == "0.0" or self.location.speed < 3:
+            if self.location.track == "0.0" or self.location.speed < 10:
                 LOG.error("Bad heading or speed too low, orientation uncorrected (track:%s)" % self.location.track)
             else:
-                correction = glider_instance.imu.correct_heading(self.location.track)
+                glider_instance.imu.correct_heading(self.location.track)
             # Update the desired heading
             glider_instance.pilot.update_location(self.location.lat, self.location.lon)
+        # Update the desired pitch relative to current speed (GPS)
+        glider_instance.pilot.scale_pitch_for_speed(self.location.speed)
         # Update the servos
-        left_angle, right_angle = glider_instance.pilot.update_wing_angles()
-        glider_instance.pwm_controller.set_wings(left_angle, right_angle)
+        flap_angle_dictionary = glider_instance.pilot.update_flap_angles()
+        glider_instance.pwm_controller.set_flaps(flap_angle_dictionary)
         # Check if we're ready to switch
         if (self.location and self.location.alt and type(self.location.alt) == float and self.location.alt < self.parachute_height):
             self.readyToSwitch = True
@@ -193,11 +233,11 @@ class parachute(gliderState):
         glider_instance.pilot.desired_pitch_deg = -80
         if self.chute_delay < 1:
             glider_instance.pwm_controller.release_parachute()
-            glider_instance.pwm_controller.set_wings(
+            glider_instance.pwm_controller.set_flaps(
                 glider_config.getfloat("flight", "wing_flat_angle_l"),
                 glider_config.getfloat("flight", "wing_flat_angle_r")
             )
-        glider_instance.pilot.update_wing_angles()
+        glider_instance.pilot.update_flap_angles()
         self.chute_delay -= 1
 
     def switch(self):
@@ -257,9 +297,11 @@ class test_chute(gliderState):
     def execute(self, glider_instance):
         now = time.time()
         if not self.deploy_init_timestamp:
+            self.readyToSwitch = False
+            glider_instance.pwm_controller.release_parachute(reset=True)
             glider_instance.speak("Parachute test")
             try:
-                glider_instance.camera.take_video(60)
+                glider_instance.camera.take_video(20)
             except:
                 LOG.exception("Camera not working")
             self.deploy_init_timestamp = now
@@ -268,11 +310,11 @@ class test_chute(gliderState):
         glider_instance.pilot.desired_yaw = glider_instance.pilot.IMU.yaw
 
         # Update the servos
-        left_angle, right_angle = glider_instance.pilot.update_wing_angles()
-        glider_instance.pwm_controller.set_wings(left_angle, right_angle)
+        left_angle, right_angle = glider_instance.pilot.update_flap_angles()
+        glider_instance.pwm_controller.set_flaps(left_angle, right_angle)
 
         # Convert the times to a countdown
-        delay_sec = int(self.chute_deploy_delay - (now - self.deploy_init_timestamp))
+        delay_sec = int(math.ceil(self.chute_deploy_delay - (now - self.deploy_init_timestamp)))
         if delay_sec != self.spoken_integer:
             glider_instance.speak(str(delay_sec))
         self.spoken_integer = delay_sec
@@ -281,3 +323,42 @@ class test_chute(gliderState):
         if (now - self.deploy_init_timestamp > self.chute_deploy_delay):
             glider_instance.pwm_controller.release_parachute()
             self.readyToSwitch = True
+            # Reset the state to be able to run the test twice
+            self.spoken_integer = -1
+            self.deploy_init_timestamp = None
+
+class test_release(gliderState):
+
+    def __init__(self):
+        super(test_release, self).__init__()
+        self.nextState = "RECOVER"
+        self.sleepTime = glider_config.getfloat("flight", "wing_update_interval")
+        self.deploy_delay = glider_config.getfloat("test_release", "release_delay_time")
+        self.deploy_init_timestamp = None
+        self.spoken_integer = -1
+
+    def execute(self, glider_instance):
+        now = time.time()
+        if not self.deploy_init_timestamp:
+            self.readyToSwitch = False
+            glider_instance.pwm_controller.release_from_balloon(reset=True)
+            glider_instance.speak("Release test")
+            try:
+                glider_instance.camera.take_video(10)
+            except:
+                LOG.exception("Camera not working")
+            self.deploy_init_timestamp = now
+
+        # Convert the times to a countdown
+        delay_sec = int(math.ceil(self.deploy_delay - (now - self.deploy_init_timestamp)))
+        if delay_sec != self.spoken_integer:
+            glider_instance.speak(str(delay_sec))
+        self.spoken_integer = delay_sec
+
+        # Check if we're ready to switch
+        if (now - self.deploy_init_timestamp > self.deploy_delay):
+            glider_instance.pwm_controller.release_from_balloon()
+            self.readyToSwitch = True
+            # Reset the state to be able to run the test twice
+            self.spoken_integer = -1
+            self.deploy_init_timestamp = None

@@ -53,6 +53,7 @@ class GliderCommandMixin(object):
         command_function = self.COMMAND_DIRECTIVES.get(command_instruction)
         if not command_function:
             LOG.error("No command found for instruction: %s" % command_instruction)
+            return None
         try:
             self.commands_received += 1
             self.last_command_dir = command_instruction
@@ -99,6 +100,7 @@ class GliderCommandMixin(object):
 
 class Glider(GliderCommandMixin):
     state_machine = {
+        "PACKAGING": gstates.packaging(),
         "HEALTH_CHECK": gstates.healthCheck(),
         "ASCENT": gstates.ascent(),
         "RELEASE": gstates.release(),
@@ -107,9 +109,10 @@ class Glider(GliderCommandMixin):
         "RECOVER": gstates.recovery(),
         "ERROR": gstates.errorState(),
 
-        "TEST_CHUTE": gstates.test_chute()
+        "TEST_CHUTE": gstates.test_chute(),
+        "TEST_RELEASE": gstates.test_release(),
     }
-    current_state = "FLIGHT"
+    current_state = "PACKAGING"
 
     def __init__(self):
         # Initialize all modules
@@ -124,7 +127,7 @@ class Glider(GliderCommandMixin):
         self.telemetry_handler = TelemetryHandler(self.radio, self.imu, self.pilot, self.gps, self)
         self.start_modules()
         self.setup_command_directives()
-        self.speak("Glider ready")
+        self.speak("IKAHRO ready")
 
     def start_modules(self):
         # Start up modules
@@ -153,7 +156,7 @@ class Glider(GliderCommandMixin):
     def speak(self, text):
         LOG.info("Speaking %s" % text)
         with open(os.devnull, "w") as devnull:
-            subprocess.call(["espeak", "-ven-us", "-m", "-p", "70", "-s", "180", text], stdout=devnull, stderr=devnull)
+            subprocess.Popen(["espeak", "-ven-us", "-m", "-p", "70", "-s", "180", text], stdout=devnull, stderr=devnull)
 
     def run_state_machine(self):
         self.running = True
@@ -179,7 +182,7 @@ class Glider(GliderCommandMixin):
                 self.stop()
                 raise # Don't go to error state, close the program!
             except:
-                LOG.error(traceback.print_exc())
+                LOG.exception("Error in Glider state machine")
                 self.current_state = "ERROR"
 
 if __name__ == '__main__':

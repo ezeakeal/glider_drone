@@ -1,10 +1,10 @@
 from unittest import TestCase
-from glider.modules.glider_gps import GPS_USB
+from glider.modules.glider_gps import GPS
 
 class TestGPS(TestCase):
 
     def setUp(self):
-        self.gps = GPS_USB()
+        self.gps = GPS()
         self.gps.start()
 
     def test_data(self):
