@@ -64,7 +64,7 @@ class GliderCommandMixin(object):
 
     def pitch_change(self, arg_array):
         new_pitch = float(arg_array[1])
-        if new_pitch < 0 and new_pitch > -90:
+        if 0 > new_pitch > -90:
             self.speak("Updating pitch")
             self.pilot.desired_pitch_deg = new_pitch
         else:
@@ -80,7 +80,7 @@ class GliderCommandMixin(object):
 
     def turn_severity_change(self, arg_array):
         new_severity = float(arg_array[1])
-        if new_severity > 0 and new_severity < 3:
+        if 0 < new_severity < 3:
             self.speak("Updating severity")
             self.pilot.turn_severity = new_severity
         else:
@@ -90,7 +90,7 @@ class GliderCommandMixin(object):
         lat = arg_array[1]
         lon = arg_array[2]
         self.speak("Updating destination")
-        self.pilot.update_destination(arg_array[1], arg_array[2])
+        self.pilot.update_destination(lat, lon)
 
     def image_command(self, arg_array):
         self.speak("Sending image")
@@ -155,8 +155,8 @@ class Glider(GliderCommandMixin):
 
     def speak(self, text):
         LOG.info("Speaking %s" % text)
-        with open(os.devnull, "w") as devnull:
-            subprocess.Popen(["espeak", "-ven-us", "-m", "-p", "70", "-s", "180", text], stdout=devnull, stderr=devnull)
+        with open(os.devnull, "w") as f:
+            subprocess.Popen(["espeak", "-ven-us", "-m", "-p", "70", "-s", "180", text], stdout=f, stderr=f)
 
     def run_state_machine(self):
         self.running = True

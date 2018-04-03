@@ -13,6 +13,7 @@ LOG = logging.getLogger("glider.%s" % __name__)
 
 class GliderCamera(object):
     threads = []
+    threadAlive = False
 
     def __init__(self, 
         low_quality_interval=15,

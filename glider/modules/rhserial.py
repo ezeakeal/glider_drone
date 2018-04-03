@@ -111,7 +111,6 @@ class RHSerial(object):
         msgflag = chr(0x00)
         message = bytearray(msg)
         msgtail = bytearray.fromhex("10 03")
-        crc16 = crcmod.predefined.mkCrcFun('crc-16-mcrf4xx')
         checkable = msgto + msgfrom + msgid + msgflag + message + msgtail
         checksum = bytearray(struct.pack(">H", crc16(str(checkable))))
         full = msghead + checkable + checksum
