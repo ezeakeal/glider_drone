@@ -2,6 +2,7 @@ import math
 import time
 import logging
 import subprocess
+import RPi.GPIO as GPIO
 
 from config import glider_config
 LOG = logging.getLogger("glider.states")
@@ -231,9 +232,24 @@ class recovery(gliderState):
         self.nextState = "RECOVER"
         self.sleepTime = 15
         self.contact_detail = glider_config.get("mission", "contact_detail")
+        self.siren_duration = glider_config.get("mission", "siren_duration")
+        self.siren_pin = glider_config.get("mission", "siren_pin")
+        self.setup_siren()
+
+    def setup_siren(self):
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(self.siren_pin, GPIO.OUT)
 
     def execute(self, glider_instance):
-        glider_instance.speak("Please help me! Contact %s" % self.contact_detail)
+        GPIO.output(self.siren_pin, GPIO.HIGH)
+        time.sleep(self.siren_duration)
+        GPIO.output(self.siren_pin, GPIO.LOW)
+        time.sleep(3)
+        for i in range(3):
+            glider_instance.speak("Please help me! Contact %s" % self.contact_detail)
+            time.sleep(10)
+        glider_instance.speak("Disconnect the Green Blue exposed jumper leads to silence alarm")
+        time.sleep(10)
 
     def switch(self):
         pass

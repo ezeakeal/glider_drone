@@ -11,14 +11,13 @@ Setup remote debug (https://nathanpjones.com/2016/02/remote-debug-gpio-on-raspbe
 1. Balloon (Hwoyee HY-1000) http://randomaerospace.com/Random_Aerospace/Balloons.html
 2. Parachute (18 in. Spherachute + 42 in. Spherachute) http://spherachutes.com/
 3. Glider (Go Discover FPV EPO) https://hobbyking.com/en_us/hobbykingr-tm-go-discover-fpv-plane-epo-1600mm-kit.html
-4. Foil tape - reflectors
-5. Copper tape - make dipole antenna out of glider structural rod
-6. 2 LoRa radios (http://www.hoperf.com/rf_transceiver/lora/RFM95W.html) with some interface.
-7. Raspberry Pi B 2
-8. Raspberry Pi servo hat + sensor hats
-9. LiIon battery packs (10000 mAh recommended.. I have 2)
-10. GoPro or equivalent
-11. Wide angle Raspberry Pi Camera (reverse view)
+4. 2 LoRa radios (http://www.hoperf.com/rf_transceiver/lora/RFM95W.html) with some interface.
+5. Raspberry Pi B 2
+6. Raspberry Pi servo hat + sensor hats
+7. LiIon battery packs (10000 mAh recommended.. I have 2)
+8. GoPro or equivalent (Xiaomi Yi is pretty great)
+9. Wide angle Raspberry Pi Camera (reverse view)
+10. A BUNCH of Micro SD cards + USB storage for logging and PiCamera storage 
 
 # Prerequisites
 
@@ -39,9 +38,14 @@ The glider will record video and logs to a directory specified in `glider_conf.i
 For example, images/videos will be written to `/data/camera' by default.
 Make any required directories before execution (I recommend using a USB stick)
 
+## Setup RTIMULib
+
+Use the following RTIMULib and guide: https://github.com/RPi-Distro/RTIMULib/tree/master/Linux
+You may need to adjust the sensor ID: https://simplifyrobotics.wordpress.com/2017/05/25/mpu9250-wrong-id-error/
+
 ## Calibrate the MPU
 
-https://github.com/RTIMULib/RTIMULib2/blob/master/Calibration.pdf
+https://github.com/RPi-Distro/RTIMULib/blob/master/Calibration.pdf
 
 Follow all the instructions for callibration (run RTIMULibCal inside of RTEllipsoidFit)
 This will generate an RTIMULib.ini config file - move that to a well-known path.
@@ -49,15 +53,7 @@ Finally, set the full path to the RTIMULib.ini file in glider_conf.ini
 
 ## Setup the Servo Hat
 
-Oh heavens. I will never buy from banggood again.
-* The sensor board I got breaks the MPU - wont initialize.
-    * https://www.banggood.com/4-in-1-Temperature-Pressure-Altitude-Light-Sensor-Module-p-965547.html
-* The servo hat had no documentation online, but I eventually found it from a comment:
-    * From a comment here: http://club.dx.com/forums/Forums.dx/threadid.1440743
-    * http://m5.img.dxcdn.com/CDDriver/xrj/340853.zip
-    * Then open the docx with the crazy characters.
-    * Here is the git repo they use: https://github.com/geekroo/Geekroo-PiCobber-PWMServo.git
-    * It's HEAVILY inspired by https://learn.adafruit.com/adafruit-16-channel-pwm-servo-hat-for-raspberry-pi/library-reference
+https://learn.adafruit.com/adafruit-16-channel-pwm-servo-hat-for-raspberry-pi/library-reference
 
 ## Find the range of your servos
 
