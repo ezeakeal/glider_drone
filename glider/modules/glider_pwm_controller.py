@@ -89,19 +89,21 @@ class GliderPWMController(object):
                 self._set_servo_angle(servo_address, angle, flap_id=flap_id)
             for servo_id, angle in self.servo_angles.items():
                 servo_address = self.servo_addresses[servo_id]
-                self._set_servo_angle(servo_address, angle, flap_id=flap_id)
+                self._set_servo_angle(servo_address, angle, servo_id=servo_id)
             time.sleep(self.controller_breather) # Sleep at least this much - can happen if there are no angle updates
 
-    def _set_servo_angle(self, servo_address, angle, min_ms=None, max_ms=None, force=False, flap_id=None):
+    def _set_servo_angle(self, servo_address, angle, min_ms=None, max_ms=None, force=True, flap_id=None, servo_id=None):
         if not min_ms:
             min_ms = self.servo_min_ms
         if not max_ms:
             max_ms = self.servo_max_ms
 
         angle = math.ceil(angle)  # round the angle to reduce calls for minor adjustments
-        if not force and flap_id:
-            if angle == self.flap_angles[flap_id]:
-                return
+        # if not force:
+        #     if flap_id and angle == self.flap_angles[flap_id]:
+        #         return
+        #     if servo_id and angle == self.servo_angles[servo_id]:
+        #         return
 
         ms_range = float(max_ms - min_ms)
         LOG.debug("Servo pulse ms range: %s" % ms_range)
@@ -110,7 +112,7 @@ class GliderPWMController(object):
         angle_pulse = (angle/180.0 * ms_range)
         LOG.debug("Angle fraction (%s = %s)" % (angle, angle_pulse))
         pulse_width = int(4096/(1000/self.frequency)*(min_ms + angle_pulse))
-        LOG.info("Setting servo(%s) pulse (fraction=%s duration=%sms)" % (
+        LOG.debug("Setting servo(%s) pulse (fraction=%s duration=%sms)" % (
             servo_address, min_ms+angle_pulse, pulse_width))
         self.pwm.set_pwm(servo_address, self.servo_pulse_lag, pulse_width + self.servo_pulse_lag)
         time.sleep(self.controller_breather)

@@ -59,10 +59,8 @@ class Pilot(object):
         if degrees:
             angle = rad(angle)
         if angle < min:
-            LOG.warning("Input scaling angle is less than min (%s)!" % angle)
             angle = min
         if angle > max:
-            LOG.warning("Input scaling angle is greater than max (%s)!" % angle)
             angle = max
         a = (angle - min)
         init_scale = a/(max-min)

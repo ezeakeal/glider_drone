@@ -28,6 +28,7 @@ from modules.glider_telem import TelemetryHandler
 
 import glider_states as gstates
 
+
 ##########################################
 # MAIN
 ##########################################
@@ -112,7 +113,7 @@ class Glider(GliderCommandMixin):
         "TEST_CHUTE": gstates.test_chute(),
         "TEST_RELEASE": gstates.test_release(),
     }
-    current_state = "PACKAGING"
+    current_state = "FLIGHT"
 
     def __init__(self):
         # Initialize all modules
@@ -134,17 +135,14 @@ class Glider(GliderCommandMixin):
         self.speak("Starting modules")
         self.gps.start()
         self.radio.start()
-        self.pilot.start()
         self.camera.start()
         self.telemetry_handler.start()
         self.pwm_controller.start()
-
 
     def stop_modules(self):
         self.speak("Stopping modules")
         self.gps.stop()
         self.radio.stop()
-        self.pilot.stop()
         self.camera.stop()
         self.telemetry_handler.stop()
         self.pwm_controller.stop()
@@ -184,6 +182,7 @@ class Glider(GliderCommandMixin):
             except:
                 LOG.exception("Error in Glider state machine")
                 self.current_state = "ERROR"
+
 
 if __name__ == '__main__':
     try:

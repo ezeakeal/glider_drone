@@ -122,10 +122,7 @@ class ascent(gliderState):
         self.desiredAltitude = glider_config.getfloat("mission", "balloon_release_altitude")
         self.wingWiggleHeight = glider_config.getfloat("mission", "wing_antifreeze_wiggle_altitude")
         self.nextState = "RELEASE"
-        self.flap_scale_counter = 0 # used for wiggle
         self.location = None
-        self.wing_flat_angle_l = glider_config.getfloat("flight", "wing_flat_angle_l")
-        self.wing_flat_angle_r = glider_config.getfloat("flight", "wing_flat_angle_r")
 
     def execute(self, glider_instance):
         LOG.info("ASCENDING!")
@@ -177,8 +174,8 @@ class glide(gliderState):
         now = time.time()
 
         # Check if we need to recalculate a bearing to our destination
-        if now - self.recalculation_timestamp > self.recalculation_interval_location :
-            self.recalculation_timestamp = now
+        if now - self.recalculation_timestamp_location > self.recalculation_interval_location :
+            self.recalculation_timestamp_location = now
             self.location = glider_instance.gps.data # Get our new location
             if self.location.lat == "n/a": # Ensure that the latitude is a value before continuing
                 LOG.error("Bad location, course unchanged")
@@ -186,14 +183,14 @@ class glide(gliderState):
                 LOG.error("Bad heading or speed too low, orientation uncorrected (track:%s)" % self.location.track)
             else:
                 glider_instance.imu.correct_heading(self.location.track)
-            glider_instance.pilot.update_location(self.location.lat, self.location.lon) # Update the desired heading
+                glider_instance.pilot.update_location(self.location.lat, self.location.lon) # Update the desired heading
 
         # Update the desired pitch relative to current speed (GPS)
         glider_instance.pilot.scale_pitch_for_speed(self.location.speed)
         # Update the servos
-        glider_instance.pilot.update_flap_angles()
+        flap_scale_dict = glider_instance.pilot.update_flap_angles()
         # Set the flaps to the flap_angle_dict
-        glider_instance.pwm_controller.set_flap_scales(glider_instance.pilot.flap_angle_scales)
+        glider_instance.pwm_controller.set_flap_scales(flap_scale_dict)
         # Check if we're ready to switch
         if (self.location and self.location.alt and type(self.location.alt) == float and self.location.alt < self.parachute_height):
             self.readyToSwitch = True
@@ -232,8 +229,8 @@ class recovery(gliderState):
         self.nextState = "RECOVER"
         self.sleepTime = 15
         self.contact_detail = glider_config.get("mission", "contact_detail")
-        self.siren_duration = glider_config.get("mission", "siren_duration")
-        self.siren_pin = glider_config.get("mission", "siren_pin")
+        self.siren_duration = glider_config.getint("mission", "siren_duration")
+        self.siren_pin = glider_config.getint("mission", "siren_pin")
         self.setup_siren()
 
     def setup_siren(self):

@@ -48,7 +48,6 @@ class TestGliderPilot(TestCase):
         for angle in range(0, -180, -3) + range(-180, 0, 3):
             self.imu_reader.yaw = rad(angle)
             flap_scales = self.pilot.update_flap_angles()
-            print("Yaw: %s --> %s" % (angle, flap_scales['rudder']))
             self.pwm_controller.set_flap_scales(flap_scales)
             time.sleep(0.05)
 
@@ -75,3 +74,14 @@ class TestGliderPilot(TestCase):
             flap_scales = self.pilot.update_flap_angles()
             self.pwm_controller.set_flap_scales({'rear': flap_scales['rear']})
             time.sleep(0.05)
+
+    def test_flap_addresses(self):
+        for flap_id in ['rear', 'left_far', 'left_near', 'right_near', 'right_far']:
+            flap_address = self.pwm_controller.flap_addresses[flap_id]
+            print ("Adjusting %s at %s" % (flap_id, flap_address))
+            self.pilot._center_all_flaps()
+            time.sleep(3)
+            for scale in [0.25, 0.5, 0.75, 0.5]:
+                print("Moving to scale: %s" % (scale))
+                self.pwm_controller.set_flap_scales({flap_id: scale})
+                time.sleep(1)

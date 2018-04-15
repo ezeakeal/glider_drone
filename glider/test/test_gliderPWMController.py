@@ -23,13 +23,6 @@ class TestGliderPWMController(TestCase):
                 self.PWM._set_servo_angle(address, ang_diff)
                 time.sleep(0.001)
 
-    def test_set_flaps(self):
-        for flap_id, address in self.PWM.flap_addresses.items():
-            print("Testing flap: %s at %s" % (flap_id, address))
-            for ang_diff in range(90,45,-3) + range(45,135,3) + range(135,90,-3):
-                self.PWM._set_servo_angle(address, ang_diff)
-                time.sleep(0.001)
-
     def test_release_parachute(self):
         self.PWM.release_parachute()
         time.sleep(1)
